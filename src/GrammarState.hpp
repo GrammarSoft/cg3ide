@@ -153,9 +153,13 @@ public:
     }
 
     QVector<State> stack;
+    QString error;
+
     typedef QMap<int,State> tokens_t;
     tokens_t tokens;
-    QString error;
+
+    typedef QMultiMap<QPair<int,int>,QString> warnings_t;
+    warnings_t warnings;
 };
 
 #endif // GRAMMARSTATE_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7

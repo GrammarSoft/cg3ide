@@ -726,6 +726,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
 }
 
 bool GrammarHighlighter::parseTag(const QString& text, const QChar *& p) {
+    bool warn_space = false;
     const QChar *n = p;
     if (*n == '"') {
         ++n;
@@ -733,6 +734,9 @@ bool GrammarHighlighter::parseTag(const QString& text, const QChar *& p) {
         if (*n != '"') {
             state->stack << S_ERROR;
             return false;
+        }
+        if (n[-1].isSpace() && !ISESC(&n[-1])) {
+            warn_space = true;
         }
     }
     if (!SKIPTOWS(n, ')', true)) {
@@ -742,6 +746,14 @@ bool GrammarHighlighter::parseTag(const QString& text, const QChar *& p) {
     setFormat(index, length, fmts[F_TAG]);
     p = n;
     state->stack.pop_back();
+
+    if (warn_space) {
+        QString tag = text.mid(index, length);
+        if (tag.count('"') >= 3) {
+            state->warnings.insert(qMakePair(index, length), tr("Sure you didn't mean %1 (missing quote)? Can silence with \\ before the space.").arg(tag.replace(QRegExp("\\s\""), "\" \"")));
+        }
+    }
+
     return true;
 }
 

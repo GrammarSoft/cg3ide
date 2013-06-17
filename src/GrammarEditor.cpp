@@ -434,6 +434,27 @@ void GrammarEditor::checkGrammar_finished(int) {
             selection.cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
             errorSelections.append(selection);
         }
+        for (GrammarState::warnings_t::const_iterator it = s->warnings.begin() ; it != s->warnings.end() ; ++it) {
+            QTextEdit::ExtraSelection selection;
+            QList<QStandardItem*> row;
+            row << new QStandardItem << new QStandardItem << new QStandardItem(it.value());
+            row[0]->setData(block.blockNumber()+1, Qt::DisplayRole);
+            row[1]->setData(tr("Warning"), Qt::DisplayRole);
+            row[1]->setIcon(style()->standardIcon(QStyle::SP_MessageBoxWarning));
+            row[0]->setEditable(false);
+            row[1]->setEditable(false);
+            row[2]->setEditable(false);
+            errorEntries.appendRow(row);
+            selection.format.setFontUnderline(true);
+            selection.format.setUnderlineColor(Qt::darkRed);
+            selection.format.setUnderlineStyle(QTextCharFormat::WaveUnderline);
+            selection.format.setToolTip(it.value());
+            selection.cursor = cur;
+            curGotoLine(selection.cursor, block.blockNumber());
+            selection.cursor.setPosition(selection.cursor.position()+it.key().first, QTextCursor::MoveAnchor);
+            selection.cursor.setPosition(selection.cursor.position()+it.key().second, QTextCursor::KeepAnchor);
+            errorSelections.append(selection);
+        }
     }
 
     errorEntries.sort(0);
@@ -511,7 +532,7 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
             QTextCursor cur = ui->editGrammar->cursorForPosition(helpEvent->pos());
             QStringList tips;
             foreach (QTextEdit::ExtraSelection es, errorSelections) {
-                if (cur.blockNumber() == es.cursor.blockNumber()-1) {
+                if (cur.position() >= es.cursor.selectionStart() && cur.position() <= es.cursor.selectionEnd()) {
                     tips << es.format.toolTip();
                 }
             }
