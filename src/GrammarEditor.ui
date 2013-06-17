@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GrammarEditor</class>
+ <widget class="QMainWindow" name="GrammarEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1100</width>
+    <height>727</height>
+   </rect>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_11">
+    <item>
+     <widget class="QPlainTextEdit" name="editGrammar">
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Courier</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="plainText">
+       <string># This is an example Constraint Grammar rules file.
+
+# There is no built-in manual yet. Resources:
+# http://visl.sdu.dk/cg3.html
+# http://groups.google.com/group/constraint-grammar
+# http://kevindonnelly.org.uk/2010/05/constraint-grammar-tutorial/
+
+# Firstly, we need to define what tags should be considered sentence delimiters. For this example, only full stop is set as delimiter.
+DELIMITERS = &quot;&lt;.&gt;&quot; ;
+
+# We can define sets for common tag clusters
+LIST CASE = (N S) (N P) ; # A set that matches either a Noun Singular or a Noun Plural
+
+SECTION
+# If there is a singular noun to the right, I cannot be a verb or noun.
+REMOVE (N) OR (V) IF (1 (N S)) ;
+
+# If there is a conjunction followed by a certain cohort of the same CASE as me, choose me.
+SELECT $$CASE IF (1 (KC) LINK 1C $$CASE) ;
+</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="frameFindReplace">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Find</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="editFind"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Replacement</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="editReplace"/>
+       </item>
+       <item row="0" column="2">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QCheckBox" name="optFindCase">
+           <property name="text">
+            <string>Case Sensitive</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="optFindRegex">
+           <property name="text">
+            <string>Regular Expression</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string> (&lt;a href=&quot;http://qt-project.org/doc/qt-5.0/qtcore/qregexp.html#introduction&quot;&gt;help&lt;/a&gt;)</string>
+           </property>
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="2">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="btnFindPrev">
+           <property name="text">
+            <string>Previous</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnFindNext">
+           <property name="text">
+            <string>Next</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnReplaceOnce">
+           <property name="text">
+            <string>Replace</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnReplaceAll">
+           <property name="text">
+            <string>Replace all</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1100</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actNew"/>
+    <addaction name="actOpen"/>
+    <addaction name="actSave"/>
+    <addaction name="actSaveas"/>
+    <addaction name="actClose"/>
+    <addaction name="separator"/>
+    <addaction name="actExit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <widget class="QMenu" name="menuFind_Replace">
+     <property name="title">
+      <string>Find/Replace ...</string>
+     </property>
+     <addaction name="actFindReplace"/>
+     <addaction name="actFindNext"/>
+     <addaction name="actFindPrev"/>
+     <addaction name="actReplaceOnce"/>
+     <addaction name="actReplaceAll"/>
+     <addaction name="actFindHide"/>
+    </widget>
+    <addaction name="actUndo"/>
+    <addaction name="actRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actCopy"/>
+    <addaction name="actCut"/>
+    <addaction name="actPaste"/>
+    <addaction name="separator"/>
+    <addaction name="actSelectAll"/>
+    <addaction name="separator"/>
+    <addaction name="menuFind_Replace"/>
+    <addaction name="actGotoLine"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actWrapGrammar"/>
+    <addaction name="actWrapIO"/>
+    <addaction name="separator"/>
+    <addaction name="actRestoreDocks"/>
+    <addaction name="separator"/>
+    <addaction name="actZoomIn"/>
+    <addaction name="actZoomOut"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actHelp"/>
+    <addaction name="actAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actOpen"/>
+   <addaction name="actSave"/>
+   <addaction name="actSaveas"/>
+   <addaction name="separator"/>
+   <addaction name="actFindReplace"/>
+   <addaction name="separator"/>
+   <addaction name="actCopy"/>
+   <addaction name="actCut"/>
+   <addaction name="actPaste"/>
+   <addaction name="separator"/>
+   <addaction name="actOptions"/>
+  </widget>
+  <widget class="QStatusBar" name="statusGrammar"/>
+  <widget class="QDockWidget" name="dockInput">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Input</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QTabWidget" name="tabWidget_2">
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tabInputText">
+     <attribute name="title">
+      <string>Text</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item>
+       <widget class="QPlainTextEdit" name="editStdin">
+        <property name="font">
+         <font>
+          <family>Courier</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="plainText">
+         <string>&quot;&lt;some&gt;&quot;
+&#9;&quot;some&quot; &lt;*&gt; &lt;quant&gt; DET S/P
+&quot;&lt;default&gt;&quot;
+&#9;&quot;default&quot; &lt;act&gt; &lt;event&gt; &lt;f-q&gt; N S NOM
+&#9;&quot;default&quot; ADJ POS
+&#9;&quot;default&quot; V PR -3S
+&#9;&quot;default&quot; V INF
+&#9;&quot;default&quot; V IMP
+&quot;&lt;text&gt;&quot;
+&#9;&quot;text&quot; &lt;sem-r&gt; N S NOM
+&quot;&lt;with&gt;&quot;
+&#9;&quot;with&quot; PRP
+&quot;&lt;bears&gt;&quot;
+&#9;&quot;bear&quot; &lt;Azo&gt; N P NOM
+&#9;&quot;bear&quot; &lt;v.contact&gt; V PR 3S
+&quot;&lt;and&gt;&quot;
+&#9;&quot;and&quot; KC
+&quot;&lt;cats&gt;&quot;
+&#9;&quot;cat&quot; &lt;Azo&gt; &lt;Adom&gt; N P NOM
+&quot;&lt;.&gt;&quot;
+</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tabInputFiles">
+     <attribute name="title">
+      <string>Files / Pipe</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QPlainTextEdit" name="editInputFiles">
+        <property name="font">
+         <font>
+          <family>Courier</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="plainText">
+         <string># One file per line.
+# Use absolute paths.
+</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnFileInAdd">
+        <property name="text">
+         <string>Add File</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPlainTextEdit" name="editInputPipe">
+        <property name="font">
+         <font>
+          <family>Courier</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="plainText">
+         <string># Enter the path to either a single program or a whole chain separated with | that the input text or files can be sent through - or just have the chain provide input some other way.
+# A line break will be treated as a |
+# Only a single process is created, through which all text and files are sent sequentially.
+# On Linux and OS X, this is started via /bin/sh -c
+# On Windows this is started via cmd.exe /D /Q /C
+{AUTO-CG-CONV}
+</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnPipeFind">
+        <property name="text">
+         <string>Add Program</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tabInputPreview">
+     <attribute name="title">
+      <string>Preview In</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_10">
+      <item>
+       <widget class="QPlainTextEdit" name="editStdinPreview">
+        <property name="font">
+         <font>
+          <family>Courier</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRunPreviewIn">
+        <property name="text">
+         <string>Refresh Input</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockOutput">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Output</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tabOutputPreview">
+     <attribute name="title">
+      <string>Preview Out</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <item>
+       <widget class="QPlainTextEdit" name="editStdout">
+        <property name="font">
+         <font>
+          <family>Courier</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRunPreviewOut">
+        <property name="text">
+         <string>Run Preview</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="optHideTags">
+        <property name="text">
+         <string>Hide identical tag sequences</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tabOutputFiles">
+     <attribute name="title">
+      <string>File(s)</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_13">
+      <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="editOutputPath"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnOutputFind">
+        <property name="text">
+         <string>Select Output File</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="optOutputSplit">
+        <property name="text">
+         <string>One output file per input file</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>&lt;i&gt;Enabling this will create multiple files in the folder above, using the given file as suffix. (&lt;a href=&quot;http://visl.sdu.dk/cg3/chunked/streamcmds.html#cmd-flush&quot;&gt;requires flush&lt;/a&gt;)&lt;/i&gt;</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QCheckBox" name="optPipeText">
+          <property name="text">
+           <string>Pipe text via ...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="optPipeFiles">
+          <property name="text">
+           <string>Pipe files via ...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRunProcess">
+        <property name="text">
+         <string>Process All Input</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockDebug">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Debug</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QTabWidget" name="tabWidget_3">
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tabDebugList">
+     <attribute name="title">
+      <string>Errors/Warnings</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_7">
+      <item>
+       <widget class="QTableView" name="tableErrors">
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tabDebugRaw">
+     <attribute name="title">
+      <string>Parse Log</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QPlainTextEdit" name="editStderr">
+        <property name="font">
+         <font>
+          <family>Courier</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tabPreviewInput">
+     <attribute name="title">
+      <string>Pipe Log</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_14">
+      <item>
+       <widget class="QPlainTextEdit" name="editStderrPreviewInput">
+        <property name="font">
+         <font>
+          <family>Courier</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tabPreviewOutput">
+     <attribute name="title">
+      <string>Preview Log</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_9">
+      <item>
+       <widget class="QPlainTextEdit" name="editStderrPreviewOutput">
+        <property name="font">
+         <font>
+          <family>Courier</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+  </widget>
+  <action name="actOpen">
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actSave">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actSaveas">
+   <property name="text">
+    <string>Save &amp;as ...</string>
+   </property>
+  </action>
+  <action name="actExit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+F4</string>
+   </property>
+  </action>
+  <action name="actCopy">
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actCut">
+   <property name="text">
+    <string>C&amp;ut</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actPaste">
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actUndo">
+   <property name="text">
+    <string>&amp;Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actRedo">
+   <property name="text">
+    <string>&amp;Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actSelectAll">
+   <property name="text">
+    <string>Select All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actGotoLine">
+   <property name="text">
+    <string>Go to Line...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actWrapGrammar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Wrap Lines (Grammar)</string>
+   </property>
+  </action>
+  <action name="actClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actFindReplace">
+   <property name="text">
+    <string>Find/Replace ...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actFindNext">
+   <property name="text">
+    <string>Find Next</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="actReplaceOnce">
+   <property name="text">
+    <string>Replace Once</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actReplaceAll">
+   <property name="text">
+    <string>Replace All</string>
+   </property>
+  </action>
+  <action name="actFindHide">
+   <property name="text">
+    <string>Hide</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="actFindPrev">
+   <property name="text">
+    <string>Find Previous</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+G</string>
+   </property>
+  </action>
+  <action name="actOptions">
+   <property name="text">
+    <string>Options</string>
+   </property>
+  </action>
+  <action name="actAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actHelp">
+   <property name="text">
+    <string>Where to get help</string>
+   </property>
+  </action>
+  <action name="actWrapIO">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Wrap Lines (Input/Output)</string>
+   </property>
+  </action>
+  <action name="actRestoreDocks">
+   <property name="text">
+    <string>Restore Dockable Windows</string>
+   </property>
+  </action>
+  <action name="actZoomIn">
+   <property name="text">
+    <string>Larger Text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="actZoomOut">
+   <property name="text">
+    <string>Smaller Text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="0" margin="0"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>actExit</sender>
+   <signal>triggered()</signal>
+   <receiver>GrammarEditor</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnFindNext</sender>
+   <signal>clicked()</signal>
+   <receiver>actFindNext</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnFindPrev</sender>
+   <signal>clicked()</signal>
+   <receiver>actFindPrev</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnReplaceOnce</sender>
+   <signal>clicked()</signal>
+   <receiver>actReplaceOnce</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnReplaceAll</sender>
+   <signal>clicked()</signal>
+   <receiver>actReplaceAll</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
