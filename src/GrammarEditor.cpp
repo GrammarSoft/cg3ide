@@ -1,3 +1,24 @@
+/*
+* Copyright (C) 2013, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
+*
+* This file is part of CG-3 IDE
+*
+* CG-3 IDE is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* CG-3 IDE is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with CG-3 IDE.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "GrammarEditor.hpp"
 #include "ui_GrammarEditor.h"
 #include "GotoLine.hpp"
@@ -121,7 +142,7 @@ void GrammarEditor::closeEvent(QCloseEvent *event) {
 }
 
 void GrammarEditor::on_actAbout_triggered() {
-    QMessageBox::about(this, tr("About CG-3 IDE"), tr("<h1>CG-3 IDE</h1><ul><li>Developed by <a href=\"http://tinodidriksen.com/\">Tino Didriksen</a> for <a href=\"http://grammarsoft.com/\">GrammarSoft ApS</a></li><li>Development funded by <a href=\"http://www2.lael.pucsp.br/~tony/\">Tony Berber Sardinha</a> at <a href=\"http://pucsp.br/\">Pontifícia Universidade Católica de São Paulo</a></li><li>Copyright 2013 GrammarSoft ApS</li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
+    QMessageBox::about(this, tr("About CG-3 IDE"), tr("<h1>CG-3 IDE</h1><ul><li>Developed by <a href=\"http://tinodidriksen.com/\">Tino Didriksen</a> for <a href=\"http://grammarsoft.com/\">GrammarSoft ApS</a></li><li>Development funded by <a href=\"http://www2.lael.pucsp.br/~tony/\">Tony Berber Sardinha</a>, <a href=\"http://pucsp.br/\">São Paulo Catholic University</a>, <a href=\"http://www2.lael.pucsp.br/corpora/\">CEPRIL</a>, <a href=\"http://cnpq.br/\">CNPq</a>, <a href=\"http://fapesp.br/\">FAPESP</a></li><li>Copyright 2013 GrammarSoft ApS</li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
 }
 
 void GrammarEditor::on_actHelp_triggered() {
