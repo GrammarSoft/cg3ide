@@ -3,7 +3,7 @@ if [ ! -f ../cg3ide/cg3ide.pro ]; then
 	echo "This should be run from the Release build folder!"
 	exit
 fi
-rm -rfv *.dmg *.app *.o *.h moc_* Makefile*
+rm -rfv *.dmg *.app *.o *.h moc_* Makefile* *.zip
 qmake ../cg3ide/cg3ide.pro
 time make -j5
 
