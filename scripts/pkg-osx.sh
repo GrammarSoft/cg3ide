@@ -1,5 +1,12 @@
 #!/bin/bash
-rm -rfv *.dmg
+if [ ! -f ../cg3ide/cg3ide.pro ]; then
+	echo "This should be run from the Release build folder!"
+	exit
+fi
+rm -rfv *.dmg *.app *.o *.h moc_* Makefile*
+qmake ../cg3ide/cg3ide.pro
+time make -j5
+
 CG3DIST=`~/Desktop/Projects/vislcg3/dist/dist-osx.pl`
 time macdeployqt cg3ide.app -dmg
 time macdeployqt cg3processor.app -dmg
