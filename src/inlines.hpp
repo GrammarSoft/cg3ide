@@ -137,6 +137,7 @@ inline QString findLatestCG3() {
     }
 
     #if defined(Q_OS_WIN)
+    paths.append(QCoreApplication::instance()->applicationDirPath());
     paths.append(QCoreApplication::instance()->applicationDirPath() + "/cg3/win32");
     #elif defined(Q_OS_MAC)
     paths.append(QCoreApplication::instance()->applicationDirPath() + "/../Resources/CG-3");

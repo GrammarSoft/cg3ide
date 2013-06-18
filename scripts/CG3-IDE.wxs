@@ -37,6 +37,12 @@
             <File Id='QT_D3DCompiler_43dll' Name='D3DCompiler_43.dll' DiskId='1' Source='/Applications/Qt5/5.0.2/msvc2010/bin/D3DCompiler_43.dll' />
             <File Id='QT_libEGLdll' Name='libEGL.dll' DiskId='1' Source='/Applications/Qt5/5.0.2/msvc2010/bin/libEGL.dll' />
             <File Id='QT_libGLESv2dll' Name='libGLESv2.dll' DiskId='1' Source='/Applications/Qt5/5.0.2/msvc2010/bin/libGLESv2.dll' />
+
+            <File Id='CG3_vislcg3exe' Name='vislcg3.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/vislcg3.exe' />
+            <File Id='CG3_cgcompexe' Name='cg-comp.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-comp.exe' />
+            <File Id='CG3_cgconvexe' Name='cg-conv.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-conv.exe' />
+            <File Id='CG3_cgprocexe' Name='cg-proc.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-proc.exe' />
+            <File Id='ICU_icuio49dll' Name='icuio49.dll' DiskId='1' Source='/Applications/ICU/49.1.2/bin/icuio49.dll' />
           </Component>
 
           <Directory Id='QTPLATFORMSDIR' Name='platforms'>
@@ -46,28 +52,12 @@
               </Component>
           </Directory>
 
-          <Directory Id='CG3DIR' Name='cg3'>
-            <Directory Id='CG3DIR_Win32' Name='win32'>
-              <Component Id='CG3_Win32' Guid='24ED87BA-22CB-400F-A5E2-F35020AEF16F'>
-                <File Id='CG3_vislcg3exe' Name='vislcg3.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/vislcg3.exe' KeyPath='yes' />
-                <File Id='CG3_cgcompexe' Name='cg-comp.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-comp.exe' />
-                <File Id='CG3_cgconvexe' Name='cg-conv.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-conv.exe' />
-                <File Id='CG3_cgprocexe' Name='cg-proc.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-proc.exe' />
-
-                <File Id='ICU_icudt51dll' Name='icudt51.dll' DiskId='1' Source='/Applications/ICU/51.2/bin/icudt51.dll' />
-                <File Id='ICU_icuin51dll' Name='icuin51.dll' DiskId='1' Source='/Applications/ICU/51.2/bin/icuin51.dll' />
-                <File Id='ICU_icuio51dll' Name='icuio51.dll' DiskId='1' Source='/Applications/ICU/51.2/bin/icuio51.dll' />
-                <File Id='ICU_icuuc51dll' Name='icuuc51.dll' DiskId='1' Source='/Applications/ICU/51.2/bin/icuuc51.dll' />
-                </Component>
-            </Directory>
-          </Directory>
-
         </Directory>
       </Directory>
 
       <Directory Id='ProgramMenuFolder'>
         <Component Id='Shortcut_StartMenu' Guid='35C73F2F-D717-4CE8-93AC-29E138BC761D'>
-          <Shortcut Id='StartMenuShortcut' Name='CG-3 IDE' Description='CG-3 Integrated Development Environment' Target='[INSTALLDIR]/cg3ide.exe' WorkingDirectory='INSTALLDIR'/>
+          <Shortcut Id='StartMenuShortcut' Name='CG-3 IDE' Description='CG-3 Integrated Development Environment' Target='[INSTALLDIR]/CG-3 IDE.exe' WorkingDirectory='INSTALLDIR'/>
           <RegistryValue Root='HKCU' Key='Software\Tino Didriksen Consult' Name='shortcut_start' Type='integer' Value='1' KeyPath='yes'/>
         </Component>
       </Directory>
@@ -76,7 +66,6 @@
     <Feature Id='Complete' Level='1'>
       <ComponentRef Id='CG3IDE' />
       <ComponentRef Id='Qt_Platforms' />
-      <ComponentRef Id='CG3_Win32' />
       <ComponentRef Id='Shortcut_StartMenu' />
     </Feature>
 
