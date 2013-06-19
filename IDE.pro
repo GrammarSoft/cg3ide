@@ -8,6 +8,9 @@ TEMPLATE = app
 CODECFORSRC = UTF-8
 CODECFORTR = UTF-8
 
+RC_FILE = cg3ide.rc
+ICON = cg3ide.icns
+
 SOURCES += src/main.cpp \
     src/GrammarEditor.cpp \
     src/GotoLine.cpp \
