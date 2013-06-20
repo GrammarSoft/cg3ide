@@ -32,4 +32,5 @@ mv -fv cg3ide-windows.zip "$ROOT/"
 
 cd "$ROOT/"
 
+chmod 0644 cg3ide-windows.*
 rsync -avzP cg3ide-windows.zip cg3ide-windows.msi tino@beta.visl.sdu.dk:/home/httpd/html/download/vislcg3/
