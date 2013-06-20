@@ -102,11 +102,17 @@ GrammarEditor::GrammarEditor(QWidget *parent) :
 
     ui->frameFindReplace->hide();
 
+    section_jump = new QComboBox;
+    ui->mainToolBar->addWidget(section_jump);
+    section_jump->addItem(tr("Jump to section..."));
+    section_jump->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    connect(section_jump, SIGNAL(activated(int)), this, SLOT(sectionJump_Activated(int)));
+
     QShortcut *findNext = new QShortcut(QKeySequence("F3"), this);
     connect(findNext, SIGNAL(activated()), ui->actFindNext, SLOT(trigger()));
 
     connect(check_timer.data(), SIGNAL(timeout()), this, SLOT(checkGrammar()));
-    connect(hilite_timer.data(), SIGNAL(timeout()), stxGrammar.data(), SLOT(clear()));
+    connect(hilite_timer.data(), SIGNAL(timeout()), this, SLOT(reHilite()));
     connect(ui->editGrammar->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValue_Changed(int)));
 
     reOptions();
@@ -179,6 +185,16 @@ void GrammarEditor::reTitle() {
     QString filename = cur_file.fileName().isEmpty() ? tr("Untitled") : cur_file.fileName();
     QString changed = ui->editGrammar->document()->isModified() ? "*" : "";
     setWindowTitle(filename + changed + tr(" - CG-3 IDE"));
+}
+
+void GrammarEditor::reHilite() {
+    stxGrammar->clear();
+    while (section_jump->count() > 1) {
+        section_jump->removeItem(section_jump->count()-1);
+    }
+    for (std::set<int>::const_iterator it = stxGrammar->section_lines.begin() ; it != stxGrammar->section_lines.end() ; ++it) {
+        section_jump->addItem(tr("Line %1: %2").arg(*it+1).arg(ui->editGrammar->document()->findBlockByNumber(*it).text()));
+    }
 }
 
 void GrammarEditor::reOptions() {
@@ -258,7 +274,7 @@ void GrammarEditor::reOptions() {
     ui->btnRunPreviewOut->show();
 
     if (rehilite) {
-        stxGrammar->clear();
+        reHilite();
     }
 }
 
@@ -974,6 +990,13 @@ void GrammarEditor::on_editFind_textEdited() {
 
 void GrammarEditor::scrollValue_Changed(int) {
     on_editFind_textEdited();
+}
+
+void GrammarEditor::sectionJump_Activated(int which) {
+    std::set<int>::const_iterator it = stxGrammar->section_lines.begin();
+    std::advance(it, which-1);
+    editorGotoLine(ui->editGrammar, *it);
+    section_jump->setCurrentIndex(0);
 }
 
 void GrammarEditor::on_btnFileInAdd_clicked(bool) {

@@ -45,6 +45,7 @@ GrammarHighlighter::GrammarHighlighter(QTextDocument *parent) :
 void GrammarHighlighter::clear() {
     set_lines.clear();
     tmpl_lines.clear();
+    section_lines.clear();
     rehighlight();
 }
 
@@ -831,6 +832,8 @@ bool GrammarHighlighter::parseAnchorish(const QString& text, const QChar *& p) {
 }
 
 bool GrammarHighlighter::parseSectionDirective(const QString& text, const QChar *& p, int length) {
+    section_lines.insert(currentBlock().blockNumber());
+
     const int index = p-text.constData();
     setFormat(index, length, fmts[F_DIRECTIVE]);
     p += length;

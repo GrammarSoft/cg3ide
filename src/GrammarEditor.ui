@@ -235,6 +235,7 @@ SELECT $$CASE IF (1 (KC) LINK 1C $$CASE) ;
    <addaction name="actPaste"/>
    <addaction name="separator"/>
    <addaction name="actOptions"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusGrammar"/>
   <widget class="QDockWidget" name="dockInput">

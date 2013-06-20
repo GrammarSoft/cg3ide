@@ -59,6 +59,8 @@ private slots:
     void on_actAbout_triggered();
     void on_actHelp_triggered();
 
+    void reHilite();
+
     void checkGrammar_finished(int);
     void previewOutRun_finished(int);
     void on_actNew_triggered();
@@ -81,6 +83,7 @@ private slots:
     void on_editFind_textEdited();
 
     void scrollValue_Changed(int);
+    void sectionJump_Activated(int);
 
     void on_btnFileInAdd_clicked(bool);
     void on_btnPipeFind_clicked(bool);
@@ -129,6 +132,7 @@ private:
     QScopedPointer<StreamHighlighter> stxInput, stxInputPreview, stxOutput;
     QRegExp rxTrace, rxReading, rxReading2;
     QString stdout_raw;
+    QComboBox *section_jump;
     bool previewIn_dirty, previewIn_run;
     bool previewOut_run;
     bool cur_file_check;

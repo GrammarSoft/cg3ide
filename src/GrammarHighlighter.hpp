@@ -25,6 +25,7 @@
 
 #include "GrammarState.hpp"
 #include <QtWidgets>
+#include <set>
 
 class GrammarHighlighter : public QSyntaxHighlighter {
     Q_OBJECT
@@ -33,6 +34,7 @@ public:
     GrammarHighlighter(QTextDocument *parent = 0);
     QMap<QString,int> set_lines;
     QMap<QString,int> tmpl_lines;
+    std::set<int> section_lines;
 
 public slots:
     void clear();
