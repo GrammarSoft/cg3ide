@@ -185,7 +185,11 @@ void OptionsDialog::italicToggled(int state) {
 }
 
 void OptionsDialog::on_btnBinaryManual_clicked(bool) {
+#if defined(Q_OS_MAC)
+    QString filename = QFileDialog::getOpenFileName(this, tr("Locate vislcg3"), ui->optBinary->text(), tr("CG-3 Binary (* *.*)"));
+#else
     QString filename = QFileDialog::getOpenFileName(this, tr("Locate vislcg3"), ui->optBinary->text(), tr("CG-3 Binary (cg3 cg3.exe vislcg3 vislcg3.exe);;Any File (*.*)"));
+#endif
     if (filename.isEmpty()) {
         return;
     }
