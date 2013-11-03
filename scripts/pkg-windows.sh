@@ -23,8 +23,24 @@ mkdir -pv '/tmp/CG-3 IDE/platforms'
 cd '/tmp/CG-3 IDE'
 echo 'Making Windows ZIP (2 of 3)'
 rsync -av "$ROOT/../cg3ide-build-Desktop/release/cg3ide.exe" './CG-3 IDE.exe'
-rsync -av "$ROOT/../cg3ide-build-Desktop/release/cg3processor.exe" /cygdrive/c/Applications/ICU/49.1.2/bin/icuio49.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/Qt5Core.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/Qt5Gui.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/Qt5Widgets.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/icudt49.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/icuuc49.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/icuin49.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/D3DCompiler_43.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/libEGL.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/bin/libGLESv2.dll /cygdrive/c/Applications/ICU/49.1.2/bin/icuio49.dll ~/vislcg3/build/VS10/src/Release/*.exe '--exclude=test*' ./
-rsync -av /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/plugins/platforms/qminimal.dll /cygdrive/c/Applications/Qt5/5.0.2/msvc2010/plugins/platforms/qwindows.dll ./platforms/
+rsync -av "$ROOT/../cg3ide-build-Desktop/release/cg3processor.exe" \
+	/cygdrive/c/Applications/ICU/51.1/bin/icuio51.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/Qt5Core.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/Qt5Gui.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/Qt5Widgets.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/icudt51.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/icuuc51.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/icuin51.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/D3DCompiler_43.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/libEGL.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/bin/libGLESv2.dll \
+	~/vislcg3/build/VS10/src/Release/*.exe \
+	'--exclude=test*' \
+	./
+rsync -av \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/plugins/platforms/qminimal.dll \
+	/cygdrive/c/Applications/Qt5/5.1.1/msvc2010/plugins/platforms/qwindows.dll \
+	./platforms/
 echo 'Making Windows ZIP (2 of 3)'
 cd ..
 zip -9r cg3ide-windows.zip 'CG-3 IDE'

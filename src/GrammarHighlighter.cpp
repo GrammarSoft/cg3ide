@@ -767,6 +767,8 @@ bool GrammarHighlighter::parseTag(const QString& text, const QChar *& p) {
     const int index = p-text.constData(), length = n-p;
     setFormat(index, length, fmts[F_TAG]);
     p = n;
+    state->tokens[index] = S_TAG;
+    state->tokens[n - text.constData()] = S_NONE;
     state->stack.pop_back();
 
     if (warn_space) {

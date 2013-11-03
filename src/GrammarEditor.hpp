@@ -63,6 +63,7 @@ private slots:
 
     void checkGrammar_finished(int);
     void previewOutRun_finished(int);
+    void previewOutRun_render();
     void on_actNew_triggered();
     void on_actClose_triggered();
     void on_actOpen_triggered();
@@ -107,8 +108,10 @@ private slots:
     void on_actRestoreDocks_triggered();
     void on_btnRunPreviewIn_clicked(bool);
     void on_btnRunPreviewOut_clicked(bool);
+    void on_btnOutputOptions_clicked(bool);
     void on_tableErrors_clicked(const QModelIndex&);
     void on_optHideTags_toggled(bool);
+    void on_optHideRemoved_toggled(bool);
     void on_editStdin_textChanged();
     void on_editInputFiles_textChanged();
     void on_editInputPipe_textChanged();

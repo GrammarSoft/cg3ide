@@ -74,6 +74,7 @@ GrammarEditor::GrammarEditor(QWidget *parent) :
     ui->actWrapGrammar->setChecked(settings.value("editor/wrapgrammar", true).toBool());
     ui->actWrapIO->setChecked(settings.value("editor/wrapio", false).toBool());
     ui->optHideTags->setChecked(settings.value("editor/hidetags", true).toBool());
+    ui->optHideRemoved->setChecked(settings.value("editor/hideremoved", true).toBool());
     ui->optFindRegex->setChecked(settings.value("editor/find_regex", false).toBool());
     ui->optFindCase->setChecked(settings.value("editor/find_case", false).toBool());
     ui->optPipeText->setChecked(settings.value("process/pipe_text", false).toBool());
@@ -101,6 +102,7 @@ GrammarEditor::GrammarEditor(QWidget *parent) :
     stxGrammar.reset(new GrammarHighlighter(ui->editGrammar->document()));
 
     ui->frameFindReplace->hide();
+    ui->frameOutputOptions->hide();
 
     section_jump = new QComboBox;
     ui->mainToolBar->addWidget(section_jump);
@@ -536,7 +538,58 @@ void GrammarEditor::previewRun() {
 void GrammarEditor::previewOutRun_finished(int) {
     stdout_raw = checker.process->readAllStandardOutput();
     ui->editStderrPreviewOutput->setPlainText(checker.process->readAllStandardError());
-    on_optHideTags_toggled(ui->optHideTags->isChecked());
+    previewOutRun_render();
+}
+
+void GrammarEditor::previewOutRun_render() {
+    QString out = stdout_raw;
+    QStringList olines;
+
+    if (ui->optHideRemoved->isChecked()) {
+        QStringList lines = out.split('\n');
+        foreach (QString line, lines) {
+            if (line[0] != ';') {
+                olines << line;
+            }
+        }
+        out = olines.join("\n");
+    }
+    else {
+        olines = out.split('\n');
+    }
+
+    if (ui->optHideTags->isChecked()) {
+        QStringList otags;
+        for (int i=0 ; i<olines.size() ; ++i) {
+            QString& text = olines[i];
+            int index = 0;
+            if (rxReading.indexIn(text) != -1 && (index = rxReading2.indexIn(text)) != -1) {
+                index += rxReading2.matchedLength();
+                QStringList tags = text.mid(index).simplified().split(' ');
+                text = text.left(index);
+                QStringList::Iterator oit = otags.begin();
+                foreach (QString tag, tags) {
+                    QStringList::Iterator fit;
+                    if ((fit = std::find(oit, otags.end(), tag)) != otags.end()) {
+                        tag = '-';
+                        oit = fit;
+                    }
+                    text.append(tag).append(' ');
+                }
+                text.replace(QRegExp("(\\s+)- (- )+"), "\\1- ");
+                otags = tags;
+            }
+            else {
+                otags.clear();
+            }
+        }
+        out = olines.join("\n");
+    }
+
+    int vz = ui->editStdout->verticalScrollBar()->value(), hz = ui->editStdout->horizontalScrollBar()->value();
+    ui->editStdout->setPlainText(out);
+    ui->editStdout->verticalScrollBar()->setValue(vz);
+    ui->editStdout->horizontalScrollBar()->setValue(hz);
 }
 
 bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
@@ -1271,6 +1324,15 @@ void GrammarEditor::on_btnRunPreviewOut_clicked(bool) {
     checkGrammar();
 }
 
+void GrammarEditor::on_btnOutputOptions_clicked(bool) {
+    if (ui->frameOutputOptions->isVisible()) {
+        ui->frameOutputOptions->hide();
+    }
+    else {
+        ui->frameOutputOptions->show();
+    }
+}
+
 void GrammarEditor::on_tableErrors_clicked(const QModelIndex& item) {
     editorGotoLine(ui->editGrammar, item.sibling(item.row(), 0).data().toInt()-1);
 }
@@ -1290,40 +1352,13 @@ void GrammarEditor::on_optFindCase_toggled(bool state) {
 void GrammarEditor::on_optHideTags_toggled(bool state) {
     QSettings settings;
     settingSetOrDef(settings, "editor/hidetags", true, state);
+    previewOutRun_render();
+}
 
-    QString out = stdout_raw;
-    if (ui->optHideTags->isChecked()) {
-        QStringList lines = out.split('\n'), otags;
-        for (int i=0 ; i<lines.size() ; ++i) {
-            QString& text = lines[i];
-            int index = 0;
-            if (rxReading.indexIn(text) != -1 && (index = rxReading2.indexIn(text)) != -1) {
-                index += rxReading2.matchedLength();
-                QStringList tags = text.mid(index).simplified().split(' ');
-                text = text.left(index);
-                QStringList::Iterator oit = otags.begin();
-                foreach (QString tag, tags) {
-                    QStringList::Iterator fit;
-                    if ((fit = std::find(oit, otags.end(), tag)) != otags.end()) {
-                        tag = '-';
-                        oit = fit;
-                    }
-                    text.append(tag).append(' ');
-                }
-                text.replace(QRegExp("(\\s+)- (- )+"), "\\1- ");
-                otags = tags;
-            }
-            else {
-                otags.clear();
-            }
-        }
-        out = lines.join("\n");
-    }
-
-    int vz = ui->editStdout->verticalScrollBar()->value(), hz = ui->editStdout->horizontalScrollBar()->value();
-    ui->editStdout->setPlainText(out);
-    ui->editStdout->verticalScrollBar()->setValue(vz);
-    ui->editStdout->horizontalScrollBar()->setValue(hz);
+void GrammarEditor::on_optHideRemoved_toggled(bool state) {
+    QSettings settings;
+    settingSetOrDef(settings, "editor/hideremoved", true, state);
+    previewOutRun_render();
 }
 
 void GrammarEditor::on_editStdin_textChanged() {

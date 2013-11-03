@@ -416,13 +416,33 @@ SELECT $$CASE IF (1 (KC) LINK 1C $$CASE) ;
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="optHideTags">
+       <widget class="QPushButton" name="btnOutputOptions">
         <property name="text">
-         <string>Hide identical tag sequences</string>
+         <string>Show/Hide Options</string>
         </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frameOutputOptions">
+        <layout class="QVBoxLayout" name="verticalLayout_15">
+        <item>
+         <widget class="QCheckBox" name="optHideTags">
+          <property name="text">
+           <string>Hide identical tag sequences</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="optHideRemoved">
+          <property name="text">
+           <string>Hide removed readings</string>
+          </property>
+         </widget>
+        </item>
+        </layout>
        </widget>
       </item>
      </layout>
