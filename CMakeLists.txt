@@ -31,7 +31,7 @@ if(OPT_CPACK)
 	set(CPACK_PACKAGE_VENDOR "http://tinodidriksen.com/")
 	set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "CG-3 IDE is an environment for working with Constraint Grammar in an interactive way.")
 	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5widgets5, cg3")
-	set(CPACK_PACKAGE_VERSION "0.5.9292")
+	set(CPACK_PACKAGE_VERSION "0.5.9322")
 
 	set(CPACK_DEBIAN_BUILD_DEPENDS debhelper cmake qt5-default qt5-qmake qtbase5-dev)
 	set(CPACK_DEBIAN_PACKAGE_SOURCE_COPY svn export --force)
