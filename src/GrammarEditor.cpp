@@ -23,6 +23,7 @@
 #include "ui_GrammarEditor.h"
 #include "GotoLine.hpp"
 #include "inlines.hpp"
+#include "version.hpp"
 #include <algorithm>
 
 GrammarEditor::GrammarEditor(QWidget *parent) :
@@ -150,7 +151,9 @@ void GrammarEditor::closeEvent(QCloseEvent *event) {
 }
 
 void GrammarEditor::on_actAbout_triggered() {
-    QMessageBox::about(this, tr("About CG-3 IDE"), tr("<h1>CG-3 IDE</h1><ul><li>Developed by <a href=\"http://tinodidriksen.com/\">Tino Didriksen</a> for <a href=\"http://grammarsoft.com/\">GrammarSoft ApS</a></li><li>Development funded by <a href=\"http://www2.lael.pucsp.br/~tony/\">Tony Berber Sardinha</a>, <a href=\"http://pucsp.br/\">São Paulo Catholic University</a>, <a href=\"http://www2.lael.pucsp.br/corpora/\">CEPRIL</a>, <a href=\"http://cnpq.br/\">CNPq</a>, <a href=\"http://fapesp.br/\">FAPESP</a></li><li>Copyright 2013 GrammarSoft ApS</li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
+    QMessageBox::about(this, tr("About CG-3 IDE"), tr("<h1>CG-3 IDE</h1>")
+                       + tr("<b>Version %1.%2.%3.%4</b>").arg(CG3IDE_VERSION_MAJOR).arg(CG3IDE_VERSION_MINOR).arg(CG3IDE_VERSION_PATCH).arg(CG3IDE_REVISION)
+                       + tr("<ul><li>Developed by <a href=\"http://tinodidriksen.com/\">Tino Didriksen</a> for <a href=\"http://grammarsoft.com/\">GrammarSoft ApS</a></li><li>Development funded by <a href=\"http://www2.lael.pucsp.br/~tony/\">Tony Berber Sardinha</a>, <a href=\"http://pucsp.br/\">São Paulo Catholic University</a>, <a href=\"http://www2.lael.pucsp.br/corpora/\">CEPRIL</a>, <a href=\"http://cnpq.br/\">CNPq</a>, <a href=\"http://fapesp.br/\">FAPESP</a></li><li>Copyright 2013 GrammarSoft ApS</li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
 }
 
 void GrammarEditor::on_actHelp_triggered() {

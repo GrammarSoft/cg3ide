@@ -114,8 +114,9 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
         else {
             loops = 0;
         }
-        if (loops >= 1000) {
-            // We've been stuck trying to parse the same spot for 1000 iterations - time to give up...
+        // 1000 was too low for the Greenlandic grammar
+        if (loops >= 10000) {
+            // We've been stuck trying to parse the same spot for 10000 iterations - time to give up...
             state->stack << S_ERROR;
         }
 
@@ -261,6 +262,17 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
                 const int index = p-text.constData();
                 setFormat(index, 2, fmts[F_OPTIONAL]);
                 p += 2;
+            }
+            continue;
+        }
+        if (cs & S_EXCEPT) {
+            state->stack.pop_back();
+            if (ISCHR(p[0], 'E', 'e') && ISCHR(p[1], 'X', 'x') && ISCHR(p[2], 'C', 'c') && ISCHR(p[3], 'E', 'e')
+                    && ISCHR(p[4], 'P', 'p') && ISCHR(p[5], 'T', 't') && !p[6].isLetterOrNumber()) {
+                const int index = p-text.constData();
+                setFormat(index, 6, fmts[F_DIRECTIVE]);
+                p += 6;
+                state->stack << S_SET_INLINE;
             }
             continue;
         }
@@ -1255,7 +1267,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
         else if (ISCHR(*p,'C','c') && ISCHR(*(p+3),'Y','y') && ISCHR(*(p+1),'O','o') && ISCHR(*(p+2),'P','p')
             && !ISSTRING(p, 3)) {
             parseRuleDirective(text, p, 4);
-            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_SET_INLINE << S_RULE_FLAG;
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_EXCEPT << S_SET_INLINE << S_RULE_FLAG;
             return true;
         }
         // JUMP

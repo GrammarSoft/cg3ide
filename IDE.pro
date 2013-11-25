@@ -26,7 +26,8 @@ HEADERS  += \
     src/StreamHighlighter.hpp \
     src/GrammarHighlighter.hpp \
     src/GrammarState.hpp \
-    src/OptionsDialog.hpp
+    src/OptionsDialog.hpp \
+    src/version.hpp
 
 FORMS    += \
     src/GrammarEditor.ui \

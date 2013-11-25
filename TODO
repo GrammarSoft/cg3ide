@@ -1,0 +1,14 @@
+Projects
+Autosave
+Cmdline flags
+Allow hiding warnings
+Gutter line numbers
+Open file to preview input
+Diff
+Optional whitespace cleanup
+Preview hide all but regex matching readings ( see http://wiki.apertium.org/wiki/File:Cg.el.hiding.screenshot.png )
+
+Known Bugs
+	Environment may not be set properly via sh -c
+	Syntax highlight doesn’t update errors
+	Search highlight doesn’t update on all kinds of scrolling

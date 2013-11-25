@@ -58,7 +58,8 @@ enum enum_state {
     S_BEFORE_AFTER   = (1 << 27),
     S_WITH           = (1 << 28),
     S_WITHCHILD      = (1 << 29),
-    S_ONCE_ALWAYS    = (1 << 30)
+    S_ONCE_ALWAYS    = (1 << 30),
+    S_EXCEPT         = (1 << 31)
 };
 Q_DECLARE_FLAGS(State, enum_state)
 Q_FLAGS(State)
