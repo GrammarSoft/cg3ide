@@ -42,7 +42,7 @@ if(OPT_CPACK)
 
 	set(CPACK_DEBIAN_BUILD_DEPENDS debhelper cmake qt5-default qt5-qmake qtbase5-dev)
 	set(CPACK_DEBIAN_PACKAGE_SOURCE_COPY svn export --force)
-	set(CPACK_DEBIAN_CHANGELOG "  * Changelog is available at http://visl.sdu.dk/cg3/changelog.txt\n\n")
+	set(CPACK_DEBIAN_CHANGELOG "  * Changelog is available at http://visl.sdu.dk/svn/visl/tools/cg3ide/ChangeLog\n\n")
 	execute_process(COMMAND lsb_release -is
 		OUTPUT_VARIABLE _lsb_distribution OUTPUT_STRIP_TRAILING_WHITESPACE
 		RESULT_VARIABLE _lsb_release_failed)
