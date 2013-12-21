@@ -1,3 +1,8 @@
+2013-12-01  tino
+
+	* [r9455] CMakeLists.txt, ChangeLog, src/version.hpp,
+	  update-revision.pl: Use svn2cl to generate the ChangeLog
+
 2013-11-25  tino
 
 	* [r9407] CMakeLists.txt, IDE.pro, TODO, src/GrammarEditor.cpp,
