@@ -1,3 +1,16 @@
+2014-01-29  tino
+
+	* [r9683] CMakeLists.txt: PPAs can now be built for Ubuntu 14.04
+
+2014-01-28  tino
+
+	* [r9669] CMakeLists.txt: Ubuntu 13.04 is EOL, so drop from PPA
+
+2013-12-21  tino
+
+	* [r9508] ChangeLog, scripts/CG3-IDE.wxs, scripts/pkg-windows.sh,
+	  src/version.hpp: Qt 5.2.0
+
 2013-12-01  tino
 
 	* [r9455] CMakeLists.txt, ChangeLog, src/version.hpp,
@@ -84,175 +97,5 @@
 	  src/GrammarState.hpp: Warn on "foo "bar"
 	* [r9049] COLA.pro, cg3ide.pro, scripts/CG3-IDE.wxs, specs: CG-3
 	  IDE
-	* [r9048] .: Rename COLA to cg3ide
-	* [r9047] cg3ide -> CG-3 IDE
-
-2013-06-10  tino
-
-	* [r9038] Automatic cg-conv
-
-2013-05-29  tino
-
-	* [r9022] Input preview with pipe
-	* [r9021] Input preview with pipe
-
-2013-05-27  tino
-
-	* [r9019] Merged input Files / Pipe; Preview input WIP
-
-2013-05-26  tino
-
-	* [r9018] Dropping files onto various inputs does the right thing
-	* [r9017] Dropping files onto editor opens them
-
-2013-05-25  tino
-
-	* [r9015] Check file changed on focus gain
-
-2013-05-24  tino
-
-	* [r9014] Section #comment parses correctly
-	* [r9013] Should not have a minimum size set
-	* [r9012] Possible to adjust font size for all text windows
-	* [r9011] Toggling hide tags does not rerun; Rerun does not change
-	  scroll
-	* [r9010] Fixed Edit menu; Cleaned up action flow
-
-2013-05-21  tino
-
-	* [r9006] Better parsing of context modifiers; Better handling of
-	  parse stalemates
-
-2013-05-20  tino
-
-	* [r9004] WiX MSI XML
-	* [r9003] OS Macros; template
-	* [r9002] Help; Preview Input
-	* [r9001] Search highlight updates a bit better
-
-2013-05-19  tino
-
-	* [r9000] New Window spawns separate process
-	* [r8999] Options; About
-	* [r8998] More Options
-
-2013-05-18  tino
-
-	* [r8996] Moved Options to their own window
-
-2013-05-17  tino
-
-	* [r8995] Moved Options to their own window (WIP)
-
-2013-05-16  tino
-
-	* [r8992] Customizable styles WIP
-	* [r8990] If live preview is off, show a button; If the end of the
-	  document is not an empty parse stack, show an error.
-	* [r8988] Rehighlight on line number changes - this could be done
-	  better, somehow
-	* [r8987] Find Previous; partial flowing search highlight
-	* [r8986] More efficient search/replace
-	* [r8985] More efficient search/replace WIP
-
-2013-05-10  tino
-
-	* [r8976] CG3 IDE
-
-2013-01-29  tino
-
-	* [r8819] Port to Qt 5.0.0
-
-2012-12-09  tino
-
-	* [r8731] COLA
-	* [r8730] COLA
-
-2012-10-10  tino
-
-	* [r8614] COLA
-	* [r8613] COLA
-	* [r8612] COLA: Split corpus run to separate process
-
-2012-09-12  tino
-
-	* [r8548] COLA: Partial background processing
-
-2012-09-10  tino
-
-	* [r8546] COLA: Partial background processing
-
-2012-09-06  tino
-
-	* [r8520] COLA
-	* [r8519] COLA: More buttons
-	* [r8514] COLA: Added GUI elements
-
-2012-09-05  tino
-
-	* [r8511] COLA: More replace
-	* [r8510] COLA: Replace Once and Replace All works.
-
-2012-09-04  tino
-
-	* [r8509] COLA: Find and cycle through finds.
-	* [r8508] COLA: Now seems to parse all of CG-3 syntax.
-
-2012-09-03  tino
-
-	* [r8502] COLA
-
-2012-09-01  tino
-
-	* [r8498] COLA
-
-2012-08-31  tino
-
-	* [r8497] COLA
-
-2012-08-29  tino
-
-	* [r8494] COLA: Partial proper grammar highlight
-	* [r8493] COLA: Partial proper grammar highlight
-
-2012-08-26  tino
-
-	* [r8492] COLA: Input preview wip
-	* [r8491] COLA: Partial proper grammar highlight
-	* [r8490] COLA: Partial proper grammar highlight
-
-2012-08-25  tino
-
-	* [r8489] COLA: Mac stuff
-	* [r8488] COLA: Add partial grammar highlight
-	* [r8486] COLA: Rename CGStream* to just Stream*
-	* [r8484] COLA
-	* [r8483] COLA
-
-2012-08-23  tino
-
-	* [r8481] COLA
-	* [r8479] COLA
-	* [r8478] COLA
-	* [r8477] COLA
-	* [r8476] COLA
-	* [r8474] COLA
-
-2012-08-22  tino
-
-	* [r8473] COLA
-	* [r8472] COLA
-	* [r8471] COLA
-	* [r8470] COLA
-	* [r8469] COLA
-	* [r8468] COLA
-	* [r8466] COLA
-	* [r8465] COLA
-	* [r8464] COLA
-
-2012-08-21  tino
-
-	* [r8463] COLA
-	* [r8462] COLA
-	* [r8461] COLA initial commit
+	* [r9048] .:
 
