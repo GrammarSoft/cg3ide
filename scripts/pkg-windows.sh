@@ -31,9 +31,6 @@ rsync -av "$ROOT/../cg3ide-build-Desktop/release/cg3processor.exe" \
 	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/icudt52.dll \
 	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/icuuc52.dll \
 	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/icuin52.dll \
-	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/D3DCompiler_43.dll \
-	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/libEGL.dll \
-	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/libGLESv2.dll \
 	~/vislcg3/build/VS10/src/Release/*.exe \
 	'--exclude=test*' \
 	./

@@ -75,7 +75,7 @@ GrammarEditor::GrammarEditor(QWidget *parent) :
     ui->actWrapGrammar->setChecked(settings.value("editor/wrapgrammar", true).toBool());
     ui->actWrapIO->setChecked(settings.value("editor/wrapio", false).toBool());
     ui->optHideTags->setChecked(settings.value("editor/hidetags", true).toBool());
-    ui->optHideRemoved->setChecked(settings.value("editor/hideremoved", true).toBool());
+    ui->optHideRemoved->setChecked(settings.value("editor/hideremoved", false).toBool());
     ui->optFindRegex->setChecked(settings.value("editor/find_regex", false).toBool());
     ui->optFindCase->setChecked(settings.value("editor/find_case", false).toBool());
     ui->optPipeText->setChecked(settings.value("process/pipe_text", false).toBool());
@@ -103,7 +103,8 @@ GrammarEditor::GrammarEditor(QWidget *parent) :
     stxGrammar.reset(new GrammarHighlighter(ui->editGrammar->document()));
 
     ui->frameFindReplace->hide();
-    ui->frameOutputOptions->hide();
+    ui->btnOutputOptions->hide();
+    ui->frameOutputOptions->show();
 
     section_jump = new QComboBox;
     ui->mainToolBar->addWidget(section_jump);
