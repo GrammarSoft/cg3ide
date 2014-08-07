@@ -455,9 +455,17 @@ void GrammarEditor::checkGrammar_finished(int) {
         }
     }
 
+    bool state_error = false;
+    reparsed:
+
     for (QTextBlock block = ui->editGrammar->document()->begin() ; block.isValid() ; block = block.next()) {
         GrammarState *s = static_cast<GrammarState*>(block.userData());
         if (!s->error.isEmpty()) {
+            if (!state_error) {
+                state_error = true;
+                reHilite();
+                goto reparsed;
+            }
             QTextEdit::ExtraSelection selection;
             QList<QStandardItem*> row;
             row << new QStandardItem << new QStandardItem << new QStandardItem(s->error);
@@ -477,6 +485,9 @@ void GrammarEditor::checkGrammar_finished(int) {
             selection.cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
             errorSelections.append(selection);
         }
+    }
+    for (QTextBlock block = ui->editGrammar->document()->begin() ; block.isValid() ; block = block.next()) {
+        GrammarState *s = static_cast<GrammarState*>(block.userData());
         for (GrammarState::warnings_t::const_iterator it = s->warnings.begin() ; it != s->warnings.end() ; ++it) {
             QTextEdit::ExtraSelection selection;
             QList<QStandardItem*> row;
