@@ -513,14 +513,14 @@ SELECT $$CASE IF (1 (KC) LINK 1C $$CASE) ;
         <item>
          <widget class="QCheckBox" name="optPipeText">
           <property name="text">
-           <string>Pipe text via ...</string>
+           <string>Use input text</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QCheckBox" name="optPipeFiles">
           <property name="text">
-           <string>Pipe files via ...</string>
+           <string>Use input files</string>
           </property>
          </widget>
         </item>
