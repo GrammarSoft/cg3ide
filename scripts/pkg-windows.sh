@@ -31,7 +31,7 @@ rsync -av "$ROOT/../cg3ide-build-Desktop/release/cg3processor.exe" \
 	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/icudt52.dll \
 	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/icuuc52.dll \
 	/cygdrive/c/Applications/Qt/5.3/msvc2010_opengl/bin/icuin52.dll \
-	~/vislcg3/build/VS10/src/Release/*.exe \
+	~/vislcg3/build/VS12/src/Release/*.exe \
 	'--exclude=test*' \
 	./
 rsync -av \

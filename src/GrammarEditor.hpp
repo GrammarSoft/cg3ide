@@ -125,7 +125,7 @@ public:
     QScopedPointer<GrammarHighlighter> stxGrammar;
 
 private:
-    QString defGrammar;
+    QString defGrammar, lastGrammar;
     QFileInfo cur_file;
     QScopedPointer<QTimer> check_timer;
     QScopedPointer<QTimer> hilite_timer;

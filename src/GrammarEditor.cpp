@@ -1395,10 +1395,12 @@ void GrammarEditor::on_editGrammar_modificationChanged(bool) {
 
 void GrammarEditor::on_editGrammar_textChanged() {
     QSettings settings;
-    if (settings.value("cg3/checkgrammar", true).toBool() || settings.value("cg3/previewoutput", true).toBool()) {
+    QString curGrammar = ui->editGrammar->toPlainText();
+    if (lastGrammar != curGrammar && (settings.value("cg3/checkgrammar", true).toBool() || settings.value("cg3/previewoutput", true).toBool())) {
         check_timer->stop();
         check_timer->setSingleShot(true);
         check_timer->start(settings.value("cg3/livedelay", 2000).toInt());
+        lastGrammar = ui->editGrammar->toPlainText();
     }
 }
 

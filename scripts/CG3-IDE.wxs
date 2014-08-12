@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
-  <Product Name='CG-3 IDE' Id='*' UpgradeCode='7097985D-39E9-4100-BBCF-37BFD05D2141' Language='1033' Codepage='1252' Version='0.1.0' Manufacturer='Tino Didriksen Consult'>
+  <Product Name='CG-3 IDE' Id='*' UpgradeCode='7097985D-39E9-4100-BBCF-37BFD05D2141' Language='1033' Codepage='1252' Version='0.1.1' Manufacturer='Tino Didriksen Consult'>
 
     <Package Id='*' Keywords='Installer' Description='CG-3 IDE Installation' Comments='CG-3 IDE is an Integrated Development Environment for Constraint Grammar. Developed by Tino Didriksen (consult@tinodidriksen.com) for GrammarSoft ApS.' Manufacturer='Tino Didriksen Consult' InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' InstallScope='perMachine' />
 
     <Upgrade Id='7097985D-39E9-4100-BBCF-37BFD05D2141'>
       <UpgradeVersion OnlyDetect='no' Property='PREVIOUSFOUND'
         Minimum='0.0.1' IncludeMinimum='yes'
-        Maximum='0.1.0' IncludeMaximum='no' />
+        Maximum='0.1.1' IncludeMaximum='no' />
     </Upgrade>
 
     <CustomAction Id='AlreadyUpdated' Error='[ProductName] is already the latest version.' />
@@ -35,10 +35,10 @@
             <File Id='QT_icuuc49dll' Name='icuuc52.dll' DiskId='1' Source='/Applications/Qt/5.3/msvc2010_opengl/bin/icuuc52.dll' />
             <File Id='QT_icuin49dll' Name='icuin52.dll' DiskId='1' Source='/Applications/Qt/5.3/msvc2010_opengl/bin/icuin52.dll' />
 
-            <File Id='CG3_vislcg3exe' Name='vislcg3.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/vislcg3.exe' />
-            <File Id='CG3_cgcompexe' Name='cg-comp.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-comp.exe' />
-            <File Id='CG3_cgconvexe' Name='cg-conv.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-conv.exe' />
-            <File Id='CG3_cgprocexe' Name='cg-proc.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS10/src/Release/cg-proc.exe' />
+            <File Id='CG3_vislcg3exe' Name='vislcg3.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS12/src/Release/vislcg3.exe' />
+            <File Id='CG3_cgcompexe' Name='cg-comp.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS12/src/Release/cg-comp.exe' />
+            <File Id='CG3_cgconvexe' Name='cg-conv.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS12/src/Release/cg-conv.exe' />
+            <File Id='CG3_cgprocexe' Name='cg-proc.exe' DiskId='1' Source='/Cygwin/home/Tino/vislcg3/build/VS12/src/Release/cg-proc.exe' />
             <File Id='ICU_icuio49dll' Name='icuio52.dll' DiskId='1' Source='/Applications/ICU/52.1/bin/icuio52.dll' />
           </Component>
 
