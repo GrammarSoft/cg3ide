@@ -338,7 +338,7 @@ void GrammarEditor::refreshInput() {
         #else
         pipe.start("/bin/sh", QStringList() << "-c" << pipes.join(" | "));
         #endif
-        if (!pipe.waitForStarted(2000)) {
+        if (!pipe.waitForStarted(4000)) {
             input = tr("Error in pipe launch...");
             break;
         }
@@ -355,7 +355,8 @@ void GrammarEditor::refreshInput() {
         pipe.closeWriteChannel();
 
         prg.setLabelText(tr("Waiting for pipe to process..."));
-        if (!pipe.waitForFinished(2000)) {
+        pipe.waitForFinished(4000);
+        if (!pipe.waitForFinished(4000) && pipe.exitStatus() != QProcess::NormalExit) {
             input = tr("Error in pipe processing...");
             break;
         }
