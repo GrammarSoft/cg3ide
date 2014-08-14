@@ -345,7 +345,7 @@ void GrammarEditor::refreshInput() {
 
         prg.setLabelText(tr("Sending input through the pipe..."));
         prg.setMinimum(0);
-        prg.setMaximum(lines.size());
+        prg.setMaximum(lines.size()+1);
         prg.setValue(0);
         foreach (QString line, lines) {
             line += '\n';
