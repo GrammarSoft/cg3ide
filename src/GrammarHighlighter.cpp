@@ -27,19 +27,19 @@ GrammarHighlighter::GrammarHighlighter(QTextDocument *parent) :
     fmts(NUM_FORMATS),
     fmt_desc(NUM_FORMATS)
 {
-    fmt_desc[F_ERROR] << "error" << "Parse Errors" << "LIZT Nauns = errors abound ;" << "#ff0000" << "2" << "1";
-    fmt_desc[F_COMMENT] << "comment" << "Comments" << "# Comments with cats and dogs" << "#404040" << "1" << "1";
-    fmt_desc[F_DIRECTIVE] << "directive" << "Directives" << "SELECT, REMOVE, SECTION, etc" << "#0000ff" << "1" << "1";
-    fmt_desc[F_TAG] << "tag" << "Tag" << "\"<fluffy>\" \"bunny\" <waffle> @whogoesthere" << "#008000" << "1" << "1";
-    fmt_desc[F_SETNAME] << "setname" << "Set Names" << "DescriptiveNameForX" << "#800080" << "1" << "1";
-    fmt_desc[F_SETOP] << "setop" << "Set Operators" << QString("+ - OR | ^ ").append(QChar(0x2206)).append(' ').append(QChar(0x2229)) << "#ff00ff" << "1" << "1";
-    fmt_desc[F_TMPLNAME] << "tmplname" << "Template Names" << "NameForT T:UsedHere" << "#808000" << "1" << "1";
-    fmt_desc[F_ANCHOR] << "anchor" << "Anchors" << ":names :for :rules" << "#000080" << "1" << "1";
-    fmt_desc[F_CNTXMOD] << "cntxmod" << "Context Modifiers" << "NEGATE, NONE, NOT, ALL, etc" << "#000000" << "1" << "1";
-    fmt_desc[F_CNTXPOS] << "cntxpos" << "Context Position" << "-1**W cclll r:somewhere" << "#646400" << "1" << "1";
-    fmt_desc[F_CNTXOP] << "cntxop" << "Context Operators" << "LINK, OR, BARRIER, CBARRIER, etc" << "#000000" << "1" << "1";
-    fmt_desc[F_RULE_FLAG] << "ruleflag" << "Rule Flags" << "NEAREST, DELAYED, UNSAFE, etc" << "#000080" << "1" << "1";
-    fmt_desc[F_OPTIONAL] << "optional" << "Optional Keywords" << "SETS, TARGET, IF, END, etc" << "#808080" << "1" << "1";
+    fmt_desc[F_ERROR]     << "error"     << "Parse Errors"      << "LIZT Nauns = errors abound ;"     << "#ff0000" << "2" << "1";
+    fmt_desc[F_COMMENT]   << "comment"   << "Comments"          << "# Comments with cats and dogs"    << "#404040" << "1" << "1";
+    fmt_desc[F_DIRECTIVE] << "directive" << "Directives"        << "SELECT, REMOVE, SECTION, etc"     << "#0000ff" << "1" << "1";
+    fmt_desc[F_TAG]       << "tag"       << "Tag"               << "\"<fluffy>\" \"bunny\" <waffle> @whogoesthere" << "#008000" << "1" << "1";
+    fmt_desc[F_SETNAME]   << "setname"   << "Set Names"         << "DescriptiveNameForX"              << "#800080" << "1" << "1";
+    fmt_desc[F_SETOP]     << "setop"     << "Set Operators"     << QString("+ - OR | ^ ").append(QChar(0x2206)).append(' ').append(QChar(0x2229)) << "#ff00ff" << "1" << "1";
+    fmt_desc[F_TMPLNAME]  << "tmplname"  << "Template Names"    << "NameForT T:UsedHere"              << "#808000" << "1" << "1";
+    fmt_desc[F_ANCHOR]    << "anchor"    << "Anchors"           << ":names :for :rules"               << "#000080" << "1" << "1";
+    fmt_desc[F_CNTXMOD]   << "cntxmod"   << "Context Modifiers" << "NEGATE, NONE, NOT, ALL, etc"      << "#000000" << "1" << "1";
+    fmt_desc[F_CNTXPOS]   << "cntxpos"   << "Context Position"  << "-1**W cclll r:somewhere"          << "#646400" << "1" << "1";
+    fmt_desc[F_CNTXOP]    << "cntxop"    << "Context Operators" << "LINK, OR, BARRIER, CBARRIER, etc" << "#000000" << "1" << "1";
+    fmt_desc[F_RULE_FLAG] << "ruleflag"  << "Rule Flags"        << "NEAREST, DELAYED, UNSAFE, etc"    << "#000080" << "1" << "1";
+    fmt_desc[F_OPTIONAL]  << "optional"  << "Optional Keywords" << "SETS, TARGET, IF, END, etc"       << "#808080" << "1" << "1";
 }
 
 void GrammarHighlighter::clear() {
@@ -199,7 +199,11 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
             state->stack.pop_back();
             continue;
         }
+        // Qt bug https://bugreports.qt.io/browse/QTBUG-27451 is to blame for this hack
         if (cs & S_EQUALS) {
+            if (*p == '+') {
+                ++p;
+            }
             if (*p != '=') {
                 state->stack << S_ERROR;
                 continue;
@@ -938,6 +942,39 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             setFormat(index, length, fmts[F_DIRECTIVE]);
             p += 11;
             state->stack << (S_SEMICOLON|S_TAGLIST) << S_TAG << S_EQUALS; // ToDo: Set name list, not tag list
+            return true;
+        }
+        // REOPEN-MAPPINGS
+        else if (ISCHR(*p, 'R', 'r') && ISCHR(*(p + 14), 'S', 's') && ISCHR(*(p + 1), 'E', 'e') && ISCHR(*(p + 2), 'O', 'o')
+            && ISCHR(*(p + 3), 'P', 'p') && ISCHR(*(p + 4), 'E', 'e') && ISCHR(*(p + 5), 'N', 'n') && ISCHR(*(p + 6), '-', '_')
+            && ISCHR(*(p + 7), 'M', 'm') && ISCHR(*(p + 8), 'A', 'a') && ISCHR(*(p + 9), 'P', 'p') && ISCHR(*(p + 10), 'P', 'p')
+            && ISCHR(*(p + 11), 'I', 'i') && ISCHR(*(p + 12), 'N', 'n') && ISCHR(*(p + 13), 'G', 'g')
+            && !ISSTRING(p, 14)) {
+            const int index = p-text.constData(), length = 15;
+            setFormat(index, length, fmts[F_DIRECTIVE]);
+            p += 15;
+            state->stack << (S_SEMICOLON|S_TAGLIST) << S_TAG << S_EQUALS;
+            return true;
+        }
+        // OPTIONS
+        else if (ISCHR(*p, 'O', 'o') && ISCHR(*(p + 6), 'S', 's') && ISCHR(*(p + 1), 'P', 'p') && ISCHR(*(p + 2), 'T', 't')
+            && ISCHR(*(p + 3), 'I', 'i') && ISCHR(*(p + 4), 'O', 'o') && ISCHR(*(p + 5), 'N', 'n')
+            && !ISSTRING(p, 6)) {
+            const int index = p-text.constData(), length = 7;
+            setFormat(index, length, fmts[F_DIRECTIVE]);
+            p += 7;
+            state->stack << (S_SEMICOLON|S_TAGLIST) << S_TAG << S_EQUALS;
+            return true;
+        }
+        // STRICT-TAGS
+        else if (ISCHR(*p, 'S', 's') && ISCHR(*(p + 10), 'S', 's') && ISCHR(*(p + 1), 'T', 't') && ISCHR(*(p + 2), 'R', 'r')
+            && ISCHR(*(p + 3), 'I', 'i') && ISCHR(*(p + 4), 'C', 'c') && ISCHR(*(p + 5), 'T', 't')
+            && ISCHR(*(p + 6), '-', '-') && ISCHR(*(p + 7), 'T', 't') && ISCHR(*(p + 8), 'A', 'a') && ISCHR(*(p + 9), 'G', 'g')
+            && !ISSTRING(p, 10)) {
+            const int index = p-text.constData(), length = 11;
+            setFormat(index, length, fmts[F_DIRECTIVE]);
+            p += 11;
+            state->stack << (S_SEMICOLON|S_TAGLIST) << S_TAG << S_EQUALS;
             return true;
         }
         // ADDRELATIONS

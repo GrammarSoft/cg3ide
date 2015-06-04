@@ -430,7 +430,7 @@ void GrammarEditor::checkGrammar_finished(int) {
                     QList<QStandardItem*> row;
                     row << new QStandardItem << new QStandardItem << new QStandardItem(line.section(':', 1).simplified());
                     row[0]->setData(cap.toInt(), Qt::DisplayRole);
-                    if (line.startsWith("Warning:")) {
+                    if (line.contains("Warning:")) {
                         selection.format.setBackground(warnColor);
                         row[1]->setData(tr("Warning"), Qt::DisplayRole);
                         row[1]->setIcon(style()->standardIcon(QStyle::SP_MessageBoxWarning));
