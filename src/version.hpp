@@ -29,7 +29,7 @@ const char* const CG3IDE_COPYRIGHT_STRING = "Copyright (C) 2012-2013 GrammarSoft
 
 const uint32_t CG3IDE_VERSION_MAJOR = 0;
 const uint32_t CG3IDE_VERSION_MINOR = 6;
-const uint32_t CG3IDE_VERSION_PATCH = 0;
+const uint32_t CG3IDE_VERSION_PATCH = 1;
 const uint32_t CG3IDE_REVISION = 9690;
 
 #endif
