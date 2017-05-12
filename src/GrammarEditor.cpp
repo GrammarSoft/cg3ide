@@ -532,9 +532,12 @@ void GrammarEditor::previewRun() {
         return;
     }
     if (!QFile(checker.binGrammar).exists()) {
-        ui->editStdout->setPlainText(tr("Error in grammar..."));
         ui->editStderrPreviewOutput->setPlainText(tr("Error in grammar..."));
+        stxOutput.reset();
         return;
+    }
+    if (stxOutput.isNull()) {
+        stxOutput.reset(new StreamHighlighter(ui->editStdout->document()));
     }
     if (settings.value("cg3/previewinput", true).toBool() || previewIn_run) {
         refreshInput();
