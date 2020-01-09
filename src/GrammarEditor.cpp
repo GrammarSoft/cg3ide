@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -62,7 +62,7 @@ GrammarEditor::GrammarEditor(QWidget *parent) :
     restoreGeometry(settings.value("editor/geometry").toByteArray());
     restoreState(settings.value("editor/state").toByteArray());
 
-    int tabwidth = QFontMetrics(ui->editGrammar->font()).width('x')*3;
+    auto tabwidth = QFontMetrics(ui->editGrammar->font()).width('x')*3;
     ui->editGrammar->setTabStopWidth(tabwidth);
     tabwidth = QFontMetrics(ui->editStdin->font()).width('x')*3;
     ui->editStdin->setTabStopWidth(tabwidth);
@@ -154,11 +154,11 @@ void GrammarEditor::closeEvent(QCloseEvent *event) {
 void GrammarEditor::on_actAbout_triggered() {
     QMessageBox::about(this, tr("About CG-3 IDE"), tr("<h1>CG-3 IDE</h1>")
                        + tr("<b>Version %1.%2.%3.%4</b>").arg(CG3IDE_VERSION_MAJOR).arg(CG3IDE_VERSION_MINOR).arg(CG3IDE_VERSION_PATCH).arg(CG3IDE_REVISION)
-                       + tr("<ul><li>Developed by <a href=\"http://tinodidriksen.com/\">Tino Didriksen</a> for <a href=\"http://grammarsoft.com/\">GrammarSoft ApS</a></li><li>Development funded by <a href=\"http://www2.lael.pucsp.br/~tony/\">Tony Berber Sardinha</a>, <a href=\"http://pucsp.br/\">São Paulo Catholic University</a>, <a href=\"http://www2.lael.pucsp.br/corpora/\">CEPRIL</a>, <a href=\"http://cnpq.br/\">CNPq</a>, <a href=\"http://fapesp.br/\">FAPESP</a></li><li>Copyright 2013 GrammarSoft ApS</li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
+                       + tr("<ul><li>Developed by <a href=\"https://tinodidriksen.com/\">Tino Didriksen</a> for <a href=\"https://grammarsoft.com/\">GrammarSoft ApS</a></li><li>Development funded by <a href=\"http://www2.lael.pucsp.br/~tony/\">Tony Berber Sardinha</a>, <a href=\"http://pucsp.br/\">São Paulo Catholic University</a>, <a href=\"http://www2.lael.pucsp.br/corpora/\">CEPRIL</a>, <a href=\"http://cnpq.br/\">CNPq</a>, <a href=\"http://fapesp.br/\">FAPESP</a></li><li>Copyright 2013-2020 GrammarSoft ApS</li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
 }
 
 void GrammarEditor::on_actHelp_triggered() {
-    QMessageBox::about(this, tr("CG-3 Resources"), tr("<h1>CG-3 Resources</h1><ul><li><a href=\"http://visl.sdu.dk/constraint_grammar.html\">VISL's Constraint Grammar Page</a></li><li><a href=\"http://visl.sdu.dk/cg3.html\">VISL's CG-3 Project Page</a></li><li><a href=\"http://groups.google.com/group/constraint-grammar\">Constraint Grammar Mailing List</a></li><li><a href=\"irc://irc.freenode.net/CG3\">IRC Freenode.net #CG3</a></li><li><a href=\"http://kevindonnelly.org.uk/2010/05/constraint-grammar-tutorial/\">Kevin Donnelly's CG Tutorial</a></li><li><a href=\"http://wiki.apertium.org/wiki/Constraint_Grammar\">Apertium's CG Page</a></li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
+    QMessageBox::about(this, tr("CG-3 Resources"), tr("<h1>CG-3 Resources</h1><ul><li><a href=\"https://visl.sdu.dk/constraint_grammar.html\">VISL's Constraint Grammar Page</a></li><li><a href=\"https://visl.sdu.dk/cg3.html\">VISL's CG-3 Project Page</a></li><li><a href=\"https://groups.google.com/group/constraint-grammar\">Constraint Grammar Mailing List</a></li><li><a href=\"irc://irc.freenode.net/CG3\">IRC Freenode.net #CG3</a></li><li><a href=\"http://kevindonnelly.org.uk/2010/05/constraint-grammar-tutorial/\">Kevin Donnelly's CG Tutorial</a></li><li><a href=\"http://wiki.apertium.org/wiki/Constraint_Grammar\">Apertium's CG Page</a></li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
 }
 
 void GrammarEditor::on_actNew_triggered() {
@@ -188,9 +188,10 @@ void GrammarEditor::on_actClose_triggered() {
 }
 
 void GrammarEditor::reTitle() {
-    QString filename = cur_file.fileName().isEmpty() ? tr("Untitled") : cur_file.fileName();
-    QString changed = ui->editGrammar->document()->isModified() ? "*" : "";
-    setWindowTitle(filename + changed + tr(" - CG-3 IDE"));
+    auto filename = cur_file.fileName().isEmpty() ? tr("Untitled") : cur_file.fileName();
+    auto changed = ui->editGrammar->document()->isModified() ? "*" : "";
+    auto title = filename + changed;
+    setWindowTitle(title + tr(" - CG-3 IDE"));
 }
 
 void GrammarEditor::reHilite() {
@@ -198,8 +199,8 @@ void GrammarEditor::reHilite() {
     while (section_jump->count() > 1) {
         section_jump->removeItem(section_jump->count()-1);
     }
-    for (std::set<int>::const_iterator it = stxGrammar->section_lines.begin() ; it != stxGrammar->section_lines.end() ; ++it) {
-        section_jump->addItem(tr("Line %1: %2").arg(*it+1).arg(ui->editGrammar->document()->findBlockByNumber(*it).text()));
+    for (auto& it : stxGrammar->section_lines) {
+        section_jump->addItem(tr("Line %1: %2").arg(it+1).arg(ui->editGrammar->document()->findBlockByNumber(it).text()));
     }
 }
 
@@ -213,26 +214,27 @@ void GrammarEditor::reOptions() {
         ui->editGrammar->setTabStopWidth(QFontMetrics(f).width('x')*3);
 
         f.setPointSize(f.pointSize()-1);
+        auto tabwidth = QFontMetrics(f).width('x')*3;
         ui->editStdin->setFont(f);
-        ui->editStdin->setTabStopWidth(QFontMetrics(f).width('x')*3);
+        ui->editStdin->setTabStopWidth(tabwidth);
         ui->editStdinPreview->setFont(f);
-        ui->editStdinPreview->setTabStopWidth(QFontMetrics(f).width('x')*3);
+        ui->editStdinPreview->setTabStopWidth(tabwidth);
         ui->editStdout->setFont(f);
-        ui->editStdout->setTabStopWidth(QFontMetrics(f).width('x')*3);
+        ui->editStdout->setTabStopWidth(tabwidth);
         ui->editStderr->setFont(f);
-        ui->editStderr->setTabStopWidth(QFontMetrics(f).width('x')*3);
+        ui->editStderr->setTabStopWidth(tabwidth);
         ui->editStderrPreviewInput->setFont(f);
-        ui->editStderrPreviewInput->setTabStopWidth(QFontMetrics(f).width('x')*3);
+        ui->editStderrPreviewInput->setTabStopWidth(tabwidth);
         ui->editStderrPreviewOutput->setFont(f);
-        ui->editStderrPreviewOutput->setTabStopWidth(QFontMetrics(f).width('x')*3);
+        ui->editStderrPreviewOutput->setTabStopWidth(tabwidth);
 
         settingSetOrDef(settings, "editor/font", QString("Courier,10,-1,5,50,0,0,0,0,0"), ui->editGrammar->font().toString());
     }
 
     bool rehilite = false;
     for (int i=0 ; i<stxGrammar->fmt_desc.size() ; ++i) {
-        QTextCharFormat& fmt = stxGrammar->fmts[i];
-        const QStringList& desc = stxGrammar->fmt_desc[i];
+        auto& fmt = stxGrammar->fmts[i];
+        auto& desc = stxGrammar->fmt_desc[i];
 
         QColor col = settings.value(QString("editor/highlight_%1_color").arg(desc[0]), desc[3]).value<QColor>();
         if (fmt.foreground().color() != col) {
@@ -290,14 +292,14 @@ void GrammarEditor::refreshInput() {
     }
     QSettings settings;
 
-    QString input = ui->editStdin->toPlainText();
-    QStringList lines = input.split('\n');
+    auto input = ui->editStdin->toPlainText();
+    auto lines = input.split('\n');
 
     int num_lines = settings.value("cg3/maxinputlines", 1000).toInt() - lines.size();
     int num_chars = settings.value("cg3/maxinputchars", 60000).toInt() - input.size();
 
-    QStringList files = ui->editInputFiles->toPlainText().split('\n');
-    foreach (QString file, files) {
+    auto files = ui->editInputFiles->toPlainText().split('\n');
+    for (auto& file : files) {
         if (num_lines < 0 || num_chars < 0) {
             break;
         }
@@ -308,9 +310,9 @@ void GrammarEditor::refreshInput() {
         if (!QFileInfo(file).isReadable()) {
             continue;
         }
-        QString more_input = fileGetContents(file, num_chars);
+        auto more_input = fileGetContents(file, num_chars);
         num_chars -= more_input.size();
-        QStringList more_lines = more_input.split('\n');
+        auto more_lines = more_input.split('\n');
         num_lines -= more_lines.size();
         lines += "";
         lines += "";
@@ -318,7 +320,7 @@ void GrammarEditor::refreshInput() {
     }
 
     QStringList pipes;
-    foreach (QString prog, ui->editInputPipe->toPlainText().split('\n')) {
+    for (auto& prog : ui->editInputPipe->toPlainText().split('\n')) {
         prog = prog.trimmed();
         if (prog[0] == '#' || prog.isEmpty()) {
             continue;
@@ -347,7 +349,7 @@ void GrammarEditor::refreshInput() {
         prg.setMinimum(0);
         prg.setMaximum(lines.size()+1);
         prg.setValue(0);
-        foreach (QString line, lines) {
+        for (auto& line : lines) {
             line += '\n';
             prg.setValue(prg.value()+1);
             pipe.write(line.toUtf8());
@@ -390,7 +392,7 @@ void GrammarEditor::checkGrammar() {
         checker.process->setWorkingDirectory(cur_file.dir().path());
         checker.process->setProcessChannelMode(QProcess::MergedChannels);
         checker.process->start(settings.value("cg3/binary").toString(),
-                               QStringList() << "-C" << "UTF-8" << "--grammar-only" << "-v"
+                               QStringList() << "--grammar-only" << "-v"
                                << "-g" << checker.txtGrammar
                                << "--grammar-bin" << checker.binGrammar, QIODevice::ReadOnly);
     }
@@ -401,14 +403,14 @@ void GrammarEditor::checkGrammar_finished(int) {
     QTextStream log(checker.process.data());
     log.setCodec("UTF-8");
     ui->editStderr->setPlainText(log.readAll());
-    int vz = ui->tableErrors->verticalScrollBar()->value(), hz = ui->tableErrors->horizontalScrollBar()->value();
+    auto vz = ui->tableErrors->verticalScrollBar()->value(), hz = ui->tableErrors->horizontalScrollBar()->value();
 
     errorSelections.clear();
     errorEntries.clear();
     errorEntries.setHorizontalHeaderLabels(QStringList() << "Line" << "Type" << "Message");
-    QColor warnColor = QColor(Qt::blue).lighter(190);
-    QColor errColor = QColor(Qt::red).lighter(190);
-    QTextCursor cur = ui->editGrammar->textCursor();
+    auto warnColor = QColor(Qt::blue).lighter(190);
+    auto errColor = QColor(Qt::red).lighter(190);
+    auto cur = ui->editGrammar->textCursor();
     cur.clearSelection();
     cur.setPosition(0);
 
@@ -419,13 +421,13 @@ void GrammarEditor::checkGrammar_finished(int) {
     rxs.append(QRegExp("on line (\\d+)"));
     rxs.append(QRegExp("before line (\\d+)"));
 
-    QStringList lines = ui->editStderr->toPlainText().split("\n");
-    foreach (QString line, lines) {
-        foreach (QRegExp rx, rxs) {
+    auto lines = ui->editStderr->toPlainText().split("\n");
+    for (auto& line : lines) {
+        for (auto& rx : rxs) {
             if (rx.indexIn(line) != -1) {
-                QStringList caps = rx.capturedTexts();
+                auto caps = rx.capturedTexts();
                 caps.pop_front();
-                foreach (QString cap, caps) {
+                for (auto& cap : caps) {
                     QTextEdit::ExtraSelection selection;
                     QList<QStandardItem*> row;
                     row << new QStandardItem << new QStandardItem << new QStandardItem(line.section(':', 1).simplified());
@@ -460,7 +462,7 @@ void GrammarEditor::checkGrammar_finished(int) {
     reparsed:
 
     for (QTextBlock block = ui->editGrammar->document()->begin() ; block.isValid() ; block = block.next()) {
-        GrammarState *s = static_cast<GrammarState*>(block.userData());
+        auto s = static_cast<GrammarState*>(block.userData());
         if (!s->error.isEmpty()) {
             if (!state_error) {
                 state_error = true;
@@ -487,9 +489,9 @@ void GrammarEditor::checkGrammar_finished(int) {
             errorSelections.append(selection);
         }
     }
-    for (QTextBlock block = ui->editGrammar->document()->begin() ; block.isValid() ; block = block.next()) {
-        GrammarState *s = static_cast<GrammarState*>(block.userData());
-        for (GrammarState::warnings_t::const_iterator it = s->warnings.begin() ; it != s->warnings.end() ; ++it) {
+    for (auto block = ui->editGrammar->document()->begin() ; block.isValid() ; block = block.next()) {
+        auto s = static_cast<GrammarState*>(block.userData());
+        for (auto it = s->warnings.begin() ; it != s->warnings.end() ; ++it) {
             QTextEdit::ExtraSelection selection;
             QList<QStandardItem*> row;
             row << new QStandardItem << new QStandardItem << new QStandardItem(it.value());
@@ -548,7 +550,7 @@ void GrammarEditor::previewRun() {
         connect(checker.process.data(), SIGNAL(finished(int)), this, SLOT(previewOutRun_finished(int)));
         checker.process->setProcessChannelMode(QProcess::SeparateChannels);
         checker.process->start(settings.value("cg3/binary").toString(),
-                               QStringList() << "-C" << "UTF-8" << "-v" << "--trace"
+                               QStringList() << "-v" << "--trace"
                                << "-g" << checker.binGrammar
                                << "-I" << checker.inputFile, QIODevice::ReadOnly);
     }
@@ -566,7 +568,7 @@ void GrammarEditor::previewOutRun_render() {
 
     if (ui->optHideRemoved->isChecked()) {
         QStringList lines = out.split('\n');
-        foreach (QString line, lines) {
+        for (auto& line : lines) {
             if (line[0] != ';') {
                 olines << line;
             }
@@ -580,14 +582,14 @@ void GrammarEditor::previewOutRun_render() {
     if (ui->optHideTags->isChecked()) {
         QStringList otags;
         for (int i=0 ; i<olines.size() ; ++i) {
-            QString& text = olines[i];
+            auto& text = olines[i];
             int index = 0;
             if (rxReading.indexIn(text) != -1 && (index = rxReading2.indexIn(text)) != -1) {
                 index += rxReading2.matchedLength();
-                QStringList tags = text.mid(index).simplified().split(' ');
+                auto tags = text.mid(index).simplified().split(' ');
                 text = text.left(index);
-                QStringList::Iterator oit = otags.begin();
-                foreach (QString tag, tags) {
+                auto oit = otags.begin();
+                for (auto& tag : tags) {
                     QStringList::Iterator fit;
                     if ((fit = std::find(oit, otags.end(), tag)) != otags.end()) {
                         tag = '-';
@@ -605,7 +607,7 @@ void GrammarEditor::previewOutRun_render() {
         out = olines.join("\n");
     }
 
-    int vz = ui->editStdout->verticalScrollBar()->value(), hz = ui->editStdout->horizontalScrollBar()->value();
+    auto vz = ui->editStdout->verticalScrollBar()->value(), hz = ui->editStdout->horizontalScrollBar()->value();
     ui->editStdout->setPlainText(out);
     ui->editStdout->verticalScrollBar()->setValue(vz);
     ui->editStdout->horizontalScrollBar()->setValue(hz);
@@ -619,8 +621,8 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
                 cur_file_check = true;
                 int yesno = QMessageBox::question(this, tr("Reload changed file?"), tr("The file %1 has changed on disk since last save. Do you want to reload it? Any changes made here will be lost.").arg(check.filePath()), QMessageBox::Yes, QMessageBox::No);
                 if (yesno == QMessageBox::Yes) {
-                    int vz = ui->editGrammar->verticalScrollBar()->value(), hz = ui->editGrammar->horizontalScrollBar()->value();
-                    int pos = ui->editGrammar->textCursor().position();
+                    auto vz = ui->editGrammar->verticalScrollBar()->value(), hz = ui->editGrammar->horizontalScrollBar()->value();
+                    auto pos = ui->editGrammar->textCursor().position();
                     open(check.filePath());
                     QTextCursor tc = ui->editGrammar->textCursor();
                     tc.setPosition(pos);
@@ -637,20 +639,20 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
     }
     else if (watched == ui->editGrammar) {
         if (event->type() == QEvent::ToolTip) {
-            QHelpEvent* helpEvent = static_cast<QHelpEvent*>(event);
-            QTextCursor cur = ui->editGrammar->cursorForPosition(helpEvent->pos());
+            auto helpEvent = static_cast<QHelpEvent*>(event);
+            auto cur = ui->editGrammar->cursorForPosition(helpEvent->pos());
             QStringList tips;
-            foreach (QTextEdit::ExtraSelection es, errorSelections) {
+            for (auto& es : errorSelections) {
                 if (cur.position() >= es.cursor.selectionStart() && cur.position() <= es.cursor.selectionEnd()) {
                     tips << es.format.toolTip();
                 }
             }
 
-            const GrammarState *s = static_cast<const GrammarState*>(cur.block().userData());
-            int p = cur.positionInBlock();
-            GrammarState::tokens_t::const_iterator it_e = s->tokens.upperBound(p);
+            auto s = static_cast<const GrammarState*>(cur.block().userData());
+            auto p = cur.positionInBlock();
+            auto it_e = s->tokens.upperBound(p);
             if (it_e != s->tokens.end() && it_e != s->tokens.begin()) {
-                GrammarState::tokens_t::const_iterator it_b = it_e;
+                auto it_b = it_e;
                 --it_b;
                 QString name(cur.block().text().constData()+it_b.key(), it_e.key()-it_b.key());
                 if (it_b.value() == S_SETNAME) {
@@ -658,7 +660,7 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
                         name = name.mid(2);
                     }
                     if (stxGrammar->set_lines.contains(name)) {
-                        int line = stxGrammar->set_lines[name];
+                        auto line = stxGrammar->set_lines[name];
                         tips << QString("Set %1 defined on line %2:\n%3").arg(name).arg(line).arg(ui->editGrammar->document()->findBlockByNumber(line).text());
                     }
                 }
@@ -667,7 +669,7 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
                         name = name.mid(2);
                     }
                     if (stxGrammar->tmpl_lines.contains(name)) {
-                        int line = stxGrammar->tmpl_lines[name];
+                        auto line = stxGrammar->tmpl_lines[name];
                         tips << QString("Template %1 defined on line %2:\n%3").arg(name).arg(line).arg(ui->editGrammar->document()->findBlockByNumber(line).text());
                     }
                 }
@@ -685,10 +687,10 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
     }
     else if (watched == ui->editStdout->viewport()) {
         if (event->type() == QEvent::MouseButtonRelease) {
-            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-            QTextCursor cur = ui->editStdout->cursorForPosition(mouseEvent->pos());
-            QTextDocument *doc = cur.document();
-            int start = cur.position(), stop = cur.position();
+            auto mouseEvent = static_cast<QMouseEvent*>(event);
+            auto cur = ui->editStdout->cursorForPosition(mouseEvent->pos());
+            auto doc = cur.document();
+            auto start = cur.position(), stop = cur.position();
             while (!doc->characterAt(start).isNull() && !doc->characterAt(start).isSpace()) {
                 --start;
             }
@@ -698,7 +700,7 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
             }
             cur.setPosition(start);
             cur.setPosition(stop, QTextCursor::KeepAnchor);
-            QString tag = cur.selectedText().trimmed();
+            auto tag = cur.selectedText().trimmed();
             if (rxTrace.indexIn(tag) != -1) {
                 QRegExp rx(":(\\d+)\\b");
                 if (rx.indexIn(tag) && rx.cap(1).toInt() != 0) {
@@ -710,11 +712,11 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
         }
     }
     else if (event->type() == QEvent::Drop) {
-        QDropEvent* dropEvent = static_cast<QDropEvent*>(event);
+        auto dropEvent = static_cast<QDropEvent*>(event);
         if (dropEvent->mimeData()->hasUrls()) {
             if (watched == ui->editGrammar->viewport()) {
                 bool first = true;
-                foreach(QUrl url, dropEvent->mimeData()->urls()) {
+                for (auto& url : dropEvent->mimeData()->urls()) {
                     if (url.isLocalFile() && QFileInfo(url.toLocalFile()).isReadable()) {
                         if (first) {
                             open(url.toLocalFile());
@@ -729,7 +731,7 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
                 return true;
             }
             else if (watched == ui->editStdin->viewport()) {
-                foreach(QUrl url, dropEvent->mimeData()->urls()) {
+                for (auto& url : dropEvent->mimeData()->urls()) {
                     if (url.isLocalFile() && QFileInfo(url.toLocalFile()).isReadable()) {
                         QString text = fileGetContents(url.toLocalFile());
                         if (!text.isEmpty()) {
@@ -741,7 +743,7 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
                 return true;
             }
             else if (watched == ui->editInputFiles->viewport()) {
-                foreach(QUrl url, dropEvent->mimeData()->urls()) {
+                for (auto& url : dropEvent->mimeData()->urls()) {
                     if (url.isLocalFile() && QFileInfo(url.toLocalFile()).isReadable()) {
                         ui->editInputFiles->appendPlainText(url.toLocalFile());
                     }
@@ -750,7 +752,7 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
                 return true;
             }
             else if (watched == ui->editInputPipe->viewport()) {
-                foreach(QUrl url, dropEvent->mimeData()->urls()) {
+                for (auto& url : dropEvent->mimeData()->urls()) {
                     if (url.isLocalFile() && QFileInfo(url.toLocalFile()).isExecutable()) {
                         ui->editInputPipe->appendPlainText(url.toLocalFile());
                     }
@@ -837,7 +839,7 @@ void GrammarEditor::on_actOpen_triggered() {
         }
     }
 
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Grammar"), cur_file.path(), tr("CG-3 Grammars (*.cg3 *.cg2 *.cg *.rle);;Any File (*.*)"));
+    auto filename = QFileDialog::getOpenFileName(this, tr("Open Grammar"), cur_file.path(), tr("CG-3 Grammars (*.cg3 *.cg2 *.cg *.rle);;Any File (*.*)"));
     if (filename.isEmpty()) {
         return;
     }
@@ -859,7 +861,7 @@ bool GrammarEditor::on_actSave_triggered() {
 }
 
 bool GrammarEditor::on_actSaveas_triggered() {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Grammar"), cur_file.path(), tr("CG-3 Grammars (*.cg3 *.cg2 *.cg *.rle);;Any File (*.*)"));
+    auto filename = QFileDialog::getSaveFileName(this, tr("Save Grammar"), cur_file.path(), tr("CG-3 Grammars (*.cg3 *.cg2 *.cg *.rle);;Any File (*.*)"));
     if (filename.isEmpty()) {
         return false;
     }
@@ -868,12 +870,12 @@ bool GrammarEditor::on_actSaveas_triggered() {
 }
 
 void GrammarEditor::on_actGotoLine_triggered() {
-    GotoLine *line = new GotoLine(this, ui->editGrammar);
+    auto line = new GotoLine(this, ui->editGrammar);
     line->show();
 }
 
 void GrammarEditor::on_actOptions_triggered() {
-    OptionsDialog *opts = new OptionsDialog(this);
+    auto opts = new OptionsDialog(this);
     opts->show();
 }
 
@@ -885,7 +887,7 @@ void GrammarEditor::on_actFindHide_triggered() {
 
 void GrammarEditor::on_actFindReplace_triggered() {
     ui->frameFindReplace->show();
-    QString selected = ui->editGrammar->textCursor().selection().toPlainText();
+    auto selected = ui->editGrammar->textCursor().selection().toPlainText();
     if (!selected.isEmpty()) {
         if (ui->optFindRegex->isChecked()) {
             selected = QRegExp::escape(selected);
@@ -910,8 +912,8 @@ void GrammarEditor::on_actFindNext_triggered() {
     }
     find.setMinimal(true);
 
-    const QTextCursor& cur = ui->editGrammar->textCursor();
-    QTextCursor res = ui->editGrammar->document()->find(find, cur);
+    const auto& cur = ui->editGrammar->textCursor();
+    auto res = ui->editGrammar->document()->find(find, cur);
 
     if (res.isNull()) {
         res = ui->editGrammar->document()->find(find);
@@ -937,8 +939,8 @@ void GrammarEditor::on_actFindPrev_triggered() {
     }
     find.setMinimal(true);
 
-    const QTextCursor& cur = ui->editGrammar->textCursor();
-    QTextCursor res = ui->editGrammar->document()->find(find, cur, QTextDocument::FindBackward);
+    const auto& cur = ui->editGrammar->textCursor();
+    auto res = ui->editGrammar->document()->find(find, cur, QTextDocument::FindBackward);
 
     if (res.isNull()) {
         res = ui->editGrammar->document()->find(find, ui->editGrammar->document()->characterCount(), QTextDocument::FindBackward);
@@ -964,9 +966,9 @@ void GrammarEditor::on_actReplaceOnce_triggered() {
     }
     find.setMinimal(true);
 
-    QTextCursor cur = ui->editGrammar->textCursor();
+    auto cur = ui->editGrammar->textCursor();
     cur.beginEditBlock();
-    QTextCursor res = ui->editGrammar->document()->find(find, cur.selectionStart());
+    auto res = ui->editGrammar->document()->find(find, cur.selectionStart());
 
     if (res.isNull()) {
         res = ui->editGrammar->document()->find(find);
@@ -999,12 +1001,12 @@ void GrammarEditor::on_actReplaceAll_triggered() {
     }
     find.setMinimal(true);
 
-    QTextCursor cur = ui->editGrammar->textCursor();
+    auto cur = ui->editGrammar->textCursor();
     cur.beginEditBlock();
-    QTextCursor res = ui->editGrammar->document()->find(find, cur.selectionStart());
+    auto res = ui->editGrammar->document()->find(find, cur.selectionStart());
 
     while (!res.isNull()) {
-        QString text = res.selectedText();
+        auto text = res.selectedText();
         text.replace(find, ui->editReplace->text());
         res.removeSelectedText();
         cur.setPosition(res.selectionStart());
@@ -1042,13 +1044,13 @@ void GrammarEditor::on_editFind_textEdited() {
     find.setMinimal(true);
 
     QTextEdit::ExtraSelection selection;
-    QColor lineColor = QColor(Qt::green).lighter(160);
+    auto lineColor = QColor(Qt::green).lighter(160);
     selection.format.setBackground(lineColor);
     selection.cursor = ui->editGrammar->textCursor();
 
-    QTextCursor s = ui->editGrammar->cursorForPosition(QPoint(0,0)), e = ui->editGrammar->cursorForPosition(QPoint(ui->editGrammar->viewport()->width(), ui->editGrammar->viewport()->height()));
+    auto s = ui->editGrammar->cursorForPosition(QPoint(0,0)), e = ui->editGrammar->cursorForPosition(QPoint(ui->editGrammar->viewport()->width(), ui->editGrammar->viewport()->height()));
 
-    QString text = ui->editGrammar->toPlainText().mid(s.position(), e.position() - s.position());
+    auto text = ui->editGrammar->toPlainText().mid(s.position(), e.position() - s.position());
     int pos = 0;
     while ((pos = find.indexIn(text, pos)) != -1) {
         selection.cursor.setPosition(pos + s.position());
@@ -1065,14 +1067,14 @@ void GrammarEditor::scrollValue_Changed(int) {
 }
 
 void GrammarEditor::sectionJump_Activated(int which) {
-    std::set<int>::const_iterator it = stxGrammar->section_lines.begin();
+    auto it = stxGrammar->section_lines.begin();
     std::advance(it, which-1);
     editorGotoLine(ui->editGrammar, *it);
     section_jump->setCurrentIndex(0);
 }
 
 void GrammarEditor::on_btnFileInAdd_clicked(bool) {
-    QStringList lines = ui->editInputFiles->toPlainText().split('\n');
+    auto lines = ui->editInputFiles->toPlainText().split('\n');
     QString path;
     while (!lines.empty()) {
         if (!lines.back().trimmed().isEmpty() && !lines.back().trimmed().startsWith('#')) {
@@ -1082,7 +1084,7 @@ void GrammarEditor::on_btnFileInAdd_clicked(bool) {
         lines.pop_back();
     }
 
-    QString filename = QFileDialog::getOpenFileName(this, tr("Add Input File"),
+    auto filename = QFileDialog::getOpenFileName(this, tr("Add Input File"),
         path.isEmpty() ? cur_file.path() : path,
         tr("Any File (*.*)"));
     if (filename.isEmpty()) {
@@ -1092,7 +1094,7 @@ void GrammarEditor::on_btnFileInAdd_clicked(bool) {
 }
 
 void GrammarEditor::on_btnPipeFind_clicked(bool) {
-    QStringList lines = ui->editInputPipe->toPlainText().split('\n');
+    auto lines = ui->editInputPipe->toPlainText().split('\n');
     QString path;
     while (!lines.empty()) {
         if (!lines.back().trimmed().isEmpty() && !lines.back().trimmed().startsWith('#')) {
@@ -1102,7 +1104,7 @@ void GrammarEditor::on_btnPipeFind_clicked(bool) {
         lines.pop_back();
     }
 
-    QString filename = QFileDialog::getOpenFileName(this, tr("Add Pipe Program"),
+    auto filename = QFileDialog::getOpenFileName(this, tr("Add Pipe Program"),
         path.isEmpty() ? cur_file.path() : path,
         tr("Any File (*.*)"));
     if (filename.isEmpty()) {
@@ -1127,7 +1129,7 @@ void GrammarEditor::on_btnRunProcess_clicked(bool) {
         QMessageBox::critical(this, tr("Creating temporaries failed!"), tr("Failed to create temporary files! Make sure you have write access to the temporary folder."));
         return;
     }
-    QString name = tmpf.fileName() + "-params.txt";
+    auto name = tmpf.fileName() + "-params.txt";
 
     QSettings settings;
     QString params;
@@ -1156,7 +1158,7 @@ void GrammarEditor::on_btnRunProcess_clicked(bool) {
         params += QString("inputs\t") + inputs.join("|") + "\n";
     }
 
-    QStringList lines = ui->editInputPipe->toPlainText().split('\n');
+    auto lines = ui->editInputPipe->toPlainText().split('\n');
     QStringList progs;
     while (!lines.empty()) {
         if (!lines.front().trimmed().isEmpty() && !lines.front().trimmed().startsWith('#')) {
@@ -1195,34 +1197,34 @@ void GrammarEditor::on_optOutputSplit_toggled(bool state) {
 }
 
 void GrammarEditor::on_actUndo_triggered() {
-    QWidget *w = QApplication::focusWidget();
-    QPlainTextEdit *pte = dynamic_cast<QPlainTextEdit*>(w);
+    auto w = QApplication::focusWidget();
+    auto pte = dynamic_cast<QPlainTextEdit*>(w);
     if (pte) {
         pte->undo();
         return;
     }
-    QLineEdit *le = dynamic_cast<QLineEdit*>(w);
+    auto le = dynamic_cast<QLineEdit*>(w);
     if (le) {
         le->undo();
     }
 }
 
 void GrammarEditor::on_actRedo_triggered() {
-    QWidget *w = QApplication::focusWidget();
-    QPlainTextEdit *pte = dynamic_cast<QPlainTextEdit*>(w);
+    auto w = QApplication::focusWidget();
+    auto pte = dynamic_cast<QPlainTextEdit*>(w);
     if (pte) {
         pte->redo();
         return;
     }
-    QLineEdit *le = dynamic_cast<QLineEdit*>(w);
+    auto le = dynamic_cast<QLineEdit*>(w);
     if (le) {
         le->redo();
     }
 }
 
 void GrammarEditor::on_actCopy_triggered() {
-    QWidget *w = QApplication::focusWidget();
-    QPlainTextEdit *pte = dynamic_cast<QPlainTextEdit*>(w);
+    auto w = QApplication::focusWidget();
+    auto pte = dynamic_cast<QPlainTextEdit*>(w);
     if (pte) {
         QTextCursor tc = pte->textCursor();
         if (tc.selectionStart() == tc.selectionEnd()) {
@@ -1231,7 +1233,7 @@ void GrammarEditor::on_actCopy_triggered() {
         QApplication::clipboard()->setText(tc.selectedText());
         return;
     }
-    QLineEdit *le = dynamic_cast<QLineEdit*>(w);
+    auto le = dynamic_cast<QLineEdit*>(w);
     if (le) {
         if (le->selectionStart() == -1 && le->echoMode() == QLineEdit::Normal) {
             QApplication::clipboard()->setText(le->text());
@@ -1243,48 +1245,48 @@ void GrammarEditor::on_actCopy_triggered() {
 }
 
 void GrammarEditor::on_actCut_triggered() {
-    QWidget *w = QApplication::focusWidget();
-    QPlainTextEdit *pte = dynamic_cast<QPlainTextEdit*>(w);
+    auto w = QApplication::focusWidget();
+    auto pte = dynamic_cast<QPlainTextEdit*>(w);
     if (pte) {
         pte->cut();
         return;
     }
-    QLineEdit *le = dynamic_cast<QLineEdit*>(w);
+    auto le = dynamic_cast<QLineEdit*>(w);
     if (le) {
         le->cut();
     }
 }
 
 void GrammarEditor::on_actPaste_triggered() {
-    QWidget *w = QApplication::focusWidget();
-    QPlainTextEdit *pte = dynamic_cast<QPlainTextEdit*>(w);
+    auto w = QApplication::focusWidget();
+    auto pte = dynamic_cast<QPlainTextEdit*>(w);
     if (pte) {
         pte->paste();
         return;
     }
-    QLineEdit *le = dynamic_cast<QLineEdit*>(w);
+    auto le = dynamic_cast<QLineEdit*>(w);
     if (le) {
         le->paste();
     }
 }
 
 void GrammarEditor::on_actSelectAll_triggered() {
-    QWidget *w = QApplication::focusWidget();
-    QPlainTextEdit *pte = dynamic_cast<QPlainTextEdit*>(w);
+    auto w = QApplication::focusWidget();
+    auto pte = dynamic_cast<QPlainTextEdit*>(w);
     if (pte) {
         pte->selectAll();
         return;
     }
-    QLineEdit *le = dynamic_cast<QLineEdit*>(w);
+    auto le = dynamic_cast<QLineEdit*>(w);
     if (le) {
         le->selectAll();
     }
 }
 
 void GrammarEditor::on_actZoomIn_triggered() {
-    QWidget *w = QApplication::focusWidget();
-    QPlainTextEdit *pte = dynamic_cast<QPlainTextEdit*>(w);
-    QLineEdit *le = dynamic_cast<QLineEdit*>(w);
+    auto w = QApplication::focusWidget();
+    auto pte = dynamic_cast<QPlainTextEdit*>(w);
+    auto le = dynamic_cast<QLineEdit*>(w);
     if (pte || le) {
         QFont f = w->font();
         f.setPointSize(f.pointSize()+1);
@@ -1297,9 +1299,9 @@ void GrammarEditor::on_actZoomIn_triggered() {
 }
 
 void GrammarEditor::on_actZoomOut_triggered() {
-    QWidget *w = QApplication::focusWidget();
-    QPlainTextEdit *pte = dynamic_cast<QPlainTextEdit*>(w);
-    QLineEdit *le = dynamic_cast<QLineEdit*>(w);
+    auto w = QApplication::focusWidget();
+    auto pte = dynamic_cast<QPlainTextEdit*>(w);
+    auto le = dynamic_cast<QLineEdit*>(w);
     if (pte || le) {
         QFont f = w->font();
         f.setPointSize(std::max(f.pointSize()-1, 1));
@@ -1318,7 +1320,7 @@ void GrammarEditor::on_actWrapGrammar_toggled(bool state) {
 }
 
 void GrammarEditor::on_actWrapIO_toggled(bool state) {
-    QTextOption::WrapMode wmode = state ? QTextOption::WrapAtWordBoundaryOrAnywhere : QTextOption::NoWrap;
+    auto wmode = state ? QTextOption::WrapAtWordBoundaryOrAnywhere : QTextOption::NoWrap;
     ui->editStdin->setWordWrapMode(wmode);
     ui->editStdinPreview->setWordWrapMode(wmode);
     ui->editStdout->setWordWrapMode(wmode);
@@ -1399,7 +1401,7 @@ void GrammarEditor::on_editGrammar_modificationChanged(bool) {
 
 void GrammarEditor::on_editGrammar_textChanged() {
     QSettings settings;
-    QString curGrammar = ui->editGrammar->toPlainText();
+    auto curGrammar = ui->editGrammar->toPlainText();
     if (lastGrammar != curGrammar && (settings.value("cg3/checkgrammar", true).toBool() || settings.value("cg3/previewoutput", true).toBool())) {
         check_timer->stop();
         check_timer->setSingleShot(true);
@@ -1419,17 +1421,17 @@ void GrammarEditor::on_editGrammar_blockCountChanged(int) {
 }
 
 void GrammarEditor::on_editGrammar_cursorPositionChanged() {
-    static QTextCursor otc = ui->editGrammar->cursorForPosition(QPoint(0,0));
-    const QTextCursor& ntc = ui->editGrammar->cursorForPosition(QPoint(0,0));
+    static auto otc = ui->editGrammar->cursorForPosition(QPoint(0,0));
+    const auto& ntc = ui->editGrammar->cursorForPosition(QPoint(0,0));
     if (otc != ntc) {
         otc = ntc;
         on_editFind_textEdited();
     }
 
-    QList<QTextEdit::ExtraSelection> extraSelections = errorSelections;
+    auto extraSelections = errorSelections;
 
     QTextEdit::ExtraSelection selection;
-    QColor lineColor = QColor(Qt::yellow).lighter(180);
+    auto lineColor = QColor(Qt::yellow).lighter(180);
 
     selection.format.setBackground(lineColor);
     selection.format.setProperty(QTextFormat::FullWidthSelection, true);

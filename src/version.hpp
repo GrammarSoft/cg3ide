@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -23,13 +23,13 @@
 #ifndef VERSION_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7
 #define VERSION_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7
 
-#include <stdint.h>
+#include <cstdint>
 
-const char* const CG3IDE_COPYRIGHT_STRING = "Copyright (C) 2012-2013 GrammarSoft ApS. All Rights Reserved.";
+constexpr auto CG3IDE_COPYRIGHT_STRING = "Copyright (C) 2013-2020 GrammarSoft ApS. All Rights Reserved.";
 
-const uint32_t CG3IDE_VERSION_MAJOR = 0;
-const uint32_t CG3IDE_VERSION_MINOR = 6;
-const uint32_t CG3IDE_VERSION_PATCH = 1;
-const uint32_t CG3IDE_REVISION = 9690;
+constexpr uint32_t CG3IDE_VERSION_MAJOR = 0;
+constexpr uint32_t CG3IDE_VERSION_MINOR = 6;
+constexpr uint32_t CG3IDE_VERSION_PATCH = 2;
+constexpr uint32_t CG3IDE_REVISION = 9690;
 
 #endif

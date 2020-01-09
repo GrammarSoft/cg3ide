@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -52,11 +52,11 @@ void StreamHighlighter::highlightBlock(const QString &text) {
     }
     else if (rxs[1].indexIn(text) != -1 && (index = rxs[2].indexIn(text)) != -1) {
         index += rxs[2].matchedLength();
-        QStringList tags = text.mid(index).split(' ');
-        QString glob = text.left(index);
+        auto tags = text.mid(index).split(' ');
+        auto glob = text.left(index);
         glob.reserve(text.length());
 
-        foreach (QString tag, tags) {
+        for (auto& tag : tags) {
             for (int i=0 ; i<tagPatterns.size() ; ++i) {
                 if (tagPatterns[i].rx.indexIn(tag) != -1) {
                     setFormat(glob.length(), tag.length(), tagPatterns[i].fmt);

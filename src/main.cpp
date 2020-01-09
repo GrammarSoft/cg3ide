@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -47,20 +47,20 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    qsrand(static_cast<uint>(time(0)));
+    qsrand(static_cast<uint>(time(nullptr)));
 
-    QStringList args = app.arguments();
+    auto args = app.arguments();
     args.pop_front();
 
     if (args.empty()) {
-        GrammarEditor *w = new GrammarEditor;
+        auto w = new GrammarEditor;
         w->show();
     }
     else {
         bool first = true;
-        foreach (QString arg, args) {
+        for (auto& arg : args) {
             if (first) {
-                GrammarEditor *w = new GrammarEditor;
+                auto w = new GrammarEditor;
                 w->show();
                 w->open(arg);
                 first = false;

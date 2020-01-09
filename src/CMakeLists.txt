@@ -14,5 +14,4 @@ add_executable(cg3processor Processor.cpp ${cg3processor_MOCS} ${cg3processor_UI
 target_link_libraries(cg3ide ${Qt5Widgets_LIBRARIES})
 target_link_libraries(cg3processor ${Qt5Widgets_LIBRARIES})
 
-install(TARGETS cg3ide cg3processor RUNTIME DESTINATION bin)
-
+install(TARGETS cg3ide cg3processor RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

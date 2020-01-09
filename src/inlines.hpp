@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -24,7 +24,7 @@
 #define INLINES_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7
 
 #include <QtWidgets>
-#include <stdint.h>
+#include <cstdint>
 
 #define CG_DIRECTIVES_OR "SETS|LIST|SET|DELIMITERS|SOFT-DELIMITERS|PREFERRED-TARGETS" \
     "|MAPPING-PREFIX|MAPPINGS|CONSTRAINTS|CORRECTIONS|SECTION|BEFORE-SECTIONS" \
@@ -94,8 +94,8 @@ inline void editorGotoLine(QPlainTextEdit *editor, int line=0) {
 inline QString fileGetContents(const QString& name, qint64 max = 0) {
     QFile file(name);
     if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::information(0, QCoreApplication::tr("Open failed!"), QCoreApplication::tr("Failed to open %1 for reading!").arg(name));
-        return QString::null;
+        QMessageBox::information(nullptr, QCoreApplication::tr("Open failed!"), QCoreApplication::tr("Failed to open %1 for reading!").arg(name));
+        return QString();
     }
 
     QTextStream in(&file);
@@ -111,7 +111,7 @@ inline bool filePutContents(const QString& name, const QString& data) {
     QFile file(name);
     file.remove();
     if (!file.open(QIODevice::WriteOnly)) {
-        QMessageBox::information(0, QCoreApplication::tr("Open failed!"), QCoreApplication::tr("Failed to open %1 for writing!").arg(name));
+        QMessageBox::information(nullptr, QCoreApplication::tr("Open failed!"), QCoreApplication::tr("Failed to open %1 for writing!").arg(name));
         return false;
     }
 
@@ -180,7 +180,7 @@ inline QString findLatestCG3() {
     progress.setMaximum(paths.size());
 
     QFileInfoList cg3s;
-    foreach (QString path, paths) {
+    for (auto& path : paths) {
         progress.setValue(progress.value()+1);
 
         QDir cg3(path);
@@ -204,7 +204,7 @@ inline QString findLatestCG3() {
 
     QFileInfo latest;
     size_t vlatest = 0;
-    foreach (QFileInfo cg3, cg3s) {
+    for (auto& cg3 : cg3s) {
         progress.setValue(progress.value()+1);
         progress.setLabelText("Querying " + cg3.filePath());
 
@@ -247,38 +247,38 @@ inline bool ISNL(const QChar c) {
 
 inline bool ISESC(const QChar *p) {
     uint32_t a = 1;
-    while (*(p-a) != 0 && *(p-a) == '\\') {
+    while (*(p-a) != nullptr && *(p-a) == '\\') {
         ++a;
     }
     return (a%2==0);
 }
 
 inline bool ISCHR(const QChar p, const QChar a, const QChar b) {
-    return (p != 0 && (p == a || p == b));
+    return (p != nullptr && (p == a || p == b));
 }
 
 inline void BACKTONL(const QChar *& p) {
-    while (*p != 0 && !ISNL(*p) && (*p != ';' || ISESC(p))) {
+    while (*p != nullptr && !ISNL(*p) && (*p != ';' || ISESC(p))) {
         --p;
     }
-    if (*p == 0) {
+    if (*p == nullptr) {
         return;
     }
     ++p;
 }
 
 inline void SKIPLN(const QChar *& p) {
-    while (*p != 0 && !ISNL(*p)) {
+    while (*p != nullptr && !ISNL(*p)) {
         ++p;
     }
-    if (*p == 0) {
+    if (*p == nullptr) {
         return;
     }
     ++p;
 }
 
 inline void SKIPWS(const QChar *& p, const QChar a = 0, const QChar b = 0) {
-    while (*p != 0 && *p != a && *p != b) {
+    while (*p != nullptr && *p != a && *p != b) {
         if (*p == '#' && !ISESC(p)) {
             SKIPLN(p);
         }
@@ -290,7 +290,7 @@ inline void SKIPWS(const QChar *& p, const QChar a = 0, const QChar b = 0) {
 }
 
 inline void SKIPTOWS(const QChar *& p, const QChar a = 0, const bool allowhash = false) {
-    while (*p != 0 && !ISSPACE(*p)) {
+    while (*p != nullptr && !ISSPACE(*p)) {
         if (!allowhash && *p == '#' && !ISESC(p)) {
             SKIPLN(p);
         }
@@ -305,13 +305,13 @@ inline void SKIPTOWS(const QChar *& p, const QChar a = 0, const bool allowhash =
 }
 
 inline void SKIPTO(const QChar *& p, const QChar a) {
-    while (*p != 0 && (*p != a || ISESC(p))) {
+    while (*p != nullptr && (*p != a || ISESC(p))) {
         ++p;
     }
 }
 
 inline void SKIPTO_NOSPAN(const QChar *& p, const QChar a) {
-    while (*p != 0 && (*p != a || ISESC(p))) {
+    while (*p != nullptr && (*p != a || ISESC(p))) {
         if (ISNL(*p)) {
             break;
         }

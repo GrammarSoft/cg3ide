@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -44,33 +44,33 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     bin_auto = settings.value("cg3/autodetect", true).toBool();
     updateRevision(settings.value("cg3/binary", "").toString());
 
-    GrammarEditor& ge = *dynamic_cast<GrammarEditor*>(parent);
-    const QFont& font = ge.ui->editGrammar->font();
+    auto& ge = *dynamic_cast<GrammarEditor*>(parent);
+    const auto& font = ge.ui->editGrammar->font();
     ui->editFont->setFont(font);
     ui->editFont->setText(QString("%1 (%2pt%3%4)").arg(font.family()).arg(font.pointSize()).arg(font.bold() ? tr(", bold") : "").arg(font.italic() ? tr(", italic") : ""));
 
-    const GrammarHighlighter& gh = *ge.stxGrammar.data();
+    const auto& gh = *ge.stxGrammar.data();
     for (int i=0 ; i<gh.fmt_desc.size() ; ++i) {
-        const QStringList& desc = gh.fmt_desc[i];
-        QFont nf = font;
-        QLabel *lbl = new QLabel(desc[1]);
-        QLineEdit *edt = new QLineEdit(desc[2]);
-        QHBoxLayout *hbox = new QHBoxLayout;
+        auto& desc = gh.fmt_desc[i];
+        auto nf = font;
+        auto lbl = new QLabel(desc[1]);
+        auto edt = new QLineEdit(desc[2]);
+        auto hbox = new QHBoxLayout;
 
-        QPushButton *col = new QPushButton(tr("Change Color"));
+        auto col = new QPushButton(tr("Change Color"));
         hbox->addWidget(col);
         connect(col, SIGNAL(clicked()), this, SLOT(colorClicked()));
 
         hbox->addWidget(new QLabel(QString("<b>%1</b>:").arg(tr("Bold"))));
 
-        QCheckBox *bld = new QCheckBox;
+        auto bld = new QCheckBox;
         bld->setTristate(true);
         hbox->addWidget(bld);
         connect(bld, SIGNAL(stateChanged(int)), this, SLOT(boldToggled(int)));
 
         hbox->addWidget(new QLabel(QString("<i>%1</i>:").arg(tr("Italic"))));
 
-        QCheckBox *ita = new QCheckBox;
+        auto ita = new QCheckBox;
         ita->setTristate(true);
         hbox->addWidget(ita);
         connect(ita, SIGNAL(stateChanged(int)), this, SLOT(italicToggled(int)));
@@ -120,10 +120,10 @@ void OptionsDialog::accept() {
 
     settingSetOrDef(settings, "editor/font", QString(""), ui->editFont->font().toString());
 
-    const GrammarHighlighter& gh = *dynamic_cast<GrammarEditor*>(parent())->stxGrammar.data();
+    const auto& gh = *dynamic_cast<GrammarEditor*>(parent())->stxGrammar.data();
     for (int i=0 ; i<gh.fmt_desc.size() ; ++i) {
-        const QStringList& desc = gh.fmt_desc[i];
-        QLineEdit *edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
+        auto& desc = gh.fmt_desc[i];
+        auto edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
         settingSetOrDef(settings, QString("editor/highlight_%1_color").arg(desc[0]), desc[3], edt->palette().text().color().name());
         settingSetOrDef(settings, QString("editor/highlight_%1_bold").arg(desc[0]), QVariant(desc[5]).toInt(), static_cast<int>(blds[i]->checkState()));
         settingSetOrDef(settings, QString("editor/highlight_%1_italic").arg(desc[0]), QVariant(desc[4]).toInt(), static_cast<int>(itas[i]->checkState()));
@@ -150,9 +150,9 @@ void OptionsDialog::updateRevision(const QString& filename) {
 void OptionsDialog::colorClicked() {
     for (int i=0 ; i<cols.size() ; ++i) {
         if (cols[i] == sender()) {
-            const GrammarHighlighter& gh = *dynamic_cast<GrammarEditor*>(parent())->stxGrammar.data();
-            QLineEdit *edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
-            QColor col = QColorDialog::getColor(edt->palette().text().color(), this, tr("Select color for \"%1\"").arg(gh.fmt_desc[i][1]));
+            const auto& gh = *dynamic_cast<GrammarEditor*>(parent())->stxGrammar.data();
+            auto edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
+            auto col = QColorDialog::getColor(edt->palette().text().color(), this, tr("Select color for \"%1\"").arg(gh.fmt_desc[i][1]));
             if (col.isValid()) {
                 QPalette pl;
                 pl.setColor(QPalette::Text, col);
@@ -165,8 +165,8 @@ void OptionsDialog::colorClicked() {
 void OptionsDialog::boldToggled(int state) {
     for (int i=0 ; i<blds.size() ; ++i) {
         if (blds[i] == sender()) {
-            QLineEdit *edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
-            QFont font = edt->font();
+            auto edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
+            auto font = edt->font();
             font.setBold((state == Qt::PartiallyChecked) ? ui->editFont->font().bold() : (state == Qt::Checked));
             edt->setFont(font);
         }
@@ -176,8 +176,8 @@ void OptionsDialog::boldToggled(int state) {
 void OptionsDialog::italicToggled(int state) {
     for (int i=0 ; i<itas.size() ; ++i) {
         if (itas[i] == sender()) {
-            QLineEdit *edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
-            QFont font = edt->font();
+            auto edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
+            auto font = edt->font();
             font.setItalic((state == Qt::PartiallyChecked) ? ui->editFont->font().italic() : (state == Qt::Checked));
             edt->setFont(font);
         }
@@ -186,9 +186,9 @@ void OptionsDialog::italicToggled(int state) {
 
 void OptionsDialog::on_btnBinaryManual_clicked(bool) {
 #if defined(Q_OS_MAC)
-    QString filename = QFileDialog::getOpenFileName(this, tr("Locate vislcg3"), ui->optBinary->text(), tr("CG-3 Binary (* *.*)"));
+    auto filename = QFileDialog::getOpenFileName(this, tr("Locate vislcg3"), ui->optBinary->text(), tr("CG-3 Binary (* *.*)"));
 #else
-    QString filename = QFileDialog::getOpenFileName(this, tr("Locate vislcg3"), ui->optBinary->text(), tr("CG-3 Binary (cg3 cg3.exe vislcg3 vislcg3.exe);;Any File (*.*)"));
+    auto filename = QFileDialog::getOpenFileName(this, tr("Locate vislcg3"), ui->optBinary->text(), tr("CG-3 Binary (cg3 cg3.exe vislcg3 vislcg3.exe);;Any File (*.*)"));
 #endif
     if (filename.isEmpty()) {
         return;
@@ -208,7 +208,7 @@ void OptionsDialog::on_btnBinaryManual_clicked(bool) {
 void OptionsDialog::on_btnBinaryAuto_clicked(bool) {
     bin_auto = true;
 
-    QString latest = findLatestCG3();
+    auto latest = findLatestCG3();
     if (latest.isEmpty()) {
         QMessageBox::information(this, tr("No CG-3 binary!"), tr("Could not locate a suitable CG-3 binary in $PATH or custom locations!"));
         return;
@@ -219,15 +219,15 @@ void OptionsDialog::on_btnBinaryAuto_clicked(bool) {
 
 void OptionsDialog::on_btnFont_clicked(bool) {
     bool ok = false;
-    QFont font = QFontDialog::getFont(&ok, ui->editFont->font(), this);
+    auto font = QFontDialog::getFont(&ok, ui->editFont->font(), this);
     if (ok) {
         ui->editFont->setFont(font);
         ui->editFont->setText(QString("%1 (%2pt%3%4)").arg(font.family()).arg(font.pointSize()).arg(font.bold() ? tr(", bold") : "").arg(font.italic() ? tr(", italic") : ""));
 
-        const GrammarHighlighter& gh = *dynamic_cast<GrammarEditor*>(parent())->stxGrammar.data();
+        const auto& gh = *dynamic_cast<GrammarEditor*>(parent())->stxGrammar.data();
         for (int i=0 ; i<gh.fmt_desc.size() ; ++i) {
-            QLineEdit *edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
-            QFont nf = font;
+            auto edt = dynamic_cast<QLineEdit*>(ui->gridSyntax->itemAtPosition(i+1, 1)->widget());
+            auto nf = font;
             if (blds[i]->checkState() != Qt::PartiallyChecked) {
                 nf.setBold(blds[i]->checkState() == Qt::Checked);
             }

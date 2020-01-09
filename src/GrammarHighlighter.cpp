@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -50,7 +50,7 @@ void GrammarHighlighter::clear() {
 }
 
 bool GrammarHighlighter::SKIPWS(const QChar *& p, const QChar a, const QChar b) {
-    while (*p != 0 && *p != a && *p != b) {
+    while (*p != nullptr && *p != a && *p != b) {
         if (*p == '#' && !ISESC(p)) {
             state->stack << S_COMMENT;
             return false;
@@ -64,7 +64,7 @@ bool GrammarHighlighter::SKIPWS(const QChar *& p, const QChar a, const QChar b) 
 }
 
 bool GrammarHighlighter::SKIPTOWS(const QChar *& p, const QChar a, const bool allowhash) {
-    while (*p != 0 && !ISSPACE(*p)) {
+    while (*p != nullptr && !ISSPACE(*p)) {
         if (!allowhash && *p == '#' && !ISESC(p)) {
             state->stack << S_COMMENT;
             return false;
@@ -81,7 +81,7 @@ bool GrammarHighlighter::SKIPTOWS(const QChar *& p, const QChar a, const bool al
 }
 
 void GrammarHighlighter::highlightBlock(const QString& text) {
-    GrammarState *s = static_cast<GrammarState*>(currentBlock().previous().userData());
+    auto s = static_cast<GrammarState*>(currentBlock().previous().userData());
     if (s) {
         state = new GrammarState(*s);
         state->tokens.clear();
@@ -95,7 +95,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
     state->error.clear();
     setCurrentBlockUserData(state);
 
-    const QChar *p = text.constData();
+    auto p = text.constData();
     SKIPWS(p);
 
     if (!currentBlock().next().isValid() && state->stack.back() != S_NONE) {
@@ -106,8 +106,8 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
 
     int oz = state->stack.size();
     size_t os = state->stack.back();
-    const QChar *op = 0;
-    for (size_t loops = 0 ; *p != 0 ; op = p, oz = state->stack.size(), os = state->stack.isEmpty() ? S_ERROR : state->stack.back()) {
+    const QChar *op = nullptr;
+    for (size_t loops = 0 ; *p != nullptr ; op = p, oz = state->stack.size(), os = state->stack.isEmpty() ? S_ERROR : state->stack.back()) {
         if (op == p && oz == state->stack.size() && os == (state->stack.isEmpty() ? static_cast<size_t>(S_ERROR) : state->stack.back())) {
             ++loops;
         }
@@ -146,11 +146,11 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
         if (!SKIPWS(p)) {
             continue;
         }
-        if (*p == 0) {
+        if (*p == nullptr) {
             break;
         }
         if (cs & S_SETNAME) {
-            const QChar *n = p;
+            auto n = p;
             if (!SKIPTOWS(n, ')', true)) {
                 continue;
             }
@@ -161,7 +161,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
                 state->stack << S_ERROR;
                 continue;
             }
-            int index = p-text.constData();
+            const int index = p-text.constData();
             setFormat(index, n - p, fmts[F_SETNAME]);
             state->tokens[index] = S_SETNAME;
             state->tokens[n - text.constData()] = S_NONE;
@@ -175,7 +175,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
             continue;
         }
         if (cs & S_TMPLNAME) {
-            const QChar *n = p;
+            auto n = p;
             if (!SKIPTOWS(n, ')', true)) {
                 continue;
             }
@@ -530,7 +530,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
                 state->stack << S_RULE_FLAG;
             }
             else if (ISCHR(p[0], 'S', 's') && ISCHR(p[1], 'U', 'u') && ISCHR(p[2], 'B', 'b') && p[3] == ':' && (p[4].isDigit() || (p[4] == '-' && p[5].isDigit()))) {
-                const QChar *n = p+4;
+                auto n = p+4;
                 if (!SKIPTOWS(n, '(')) {
                     continue;
                 }
@@ -616,7 +616,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
                 ++p;
             }
             else if (ux_isSetOp(p)) {
-                const QChar *n = p;
+                auto n = p;
                 if (!SKIPTOWS(n, '(')) {
                     continue;
                 }
@@ -643,8 +643,8 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
         }
         if (cs & S_CONTEXT_TMPL) {
             state->stack.pop_back();
-            const QChar *n = p;
-            const QChar *m = p;
+            auto n = p;
+            auto m = p;
             if (!SKIPTOWS(n, '(')) {
                 continue;
             }
@@ -666,7 +666,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
                 state->stack << S_CONTEXT_TMPL;
             }
             else {
-                const QChar *n = p;
+                auto n = p;
                 if (!SKIPTOWS(n, '(')) {
                     continue;
                 }
@@ -765,7 +765,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
 
 bool GrammarHighlighter::parseTag(const QString& text, const QChar *& p) {
     bool warn_space = false;
-    const QChar *n = p;
+    auto n = p;
     if (*n == '"') {
         ++n;
         SKIPTO_NOSPAN(n, '"');
@@ -798,7 +798,7 @@ bool GrammarHighlighter::parseTag(const QString& text, const QChar *& p) {
 }
 
 bool GrammarHighlighter::parseCompositeTag(const QString& text, const QChar *& p) {
-    while (*p != 0 && *p != ';' && *p != ')') {
+    while (*p != nullptr && *p != ';' && *p != ')') {
         state->stack << S_TAG;
         if (!parseTag(text, p)) {
             return false;
@@ -815,11 +815,11 @@ bool GrammarHighlighter::parseCompositeTag(const QString& text, const QChar *& p
 }
 
 bool GrammarHighlighter::parseTagList(const QString& text, const QChar *& p) {
-    while (*p != 0 && *p != ';' && *p != ')') {
+    while (*p != nullptr && *p != ';' && *p != ')') {
         if (!SKIPWS(p, ';', ')')) {
             return false;
         }
-        if (*p != 0 && *p != ';' && *p != ')') {
+        if (*p != nullptr && *p != ';' && *p != ')') {
             if (*p == '(') {
                 ++p;
                 state->stack << S_COMPOSITETAG;
@@ -839,7 +839,7 @@ bool GrammarHighlighter::parseTagList(const QString& text, const QChar *& p) {
 }
 
 bool GrammarHighlighter::parseAnchorish(const QString& text, const QChar *& p) {
-    const QChar *n = p;
+    auto n = p;
     if (!SKIPTOWS(n, 0, true)) {
         return false;
     }
@@ -882,7 +882,7 @@ bool GrammarHighlighter::parseRuleDirective(const QString& text, const QChar *& 
 }
 
 bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
-    while (*p != 0) {
+    while (*p != nullptr) {
         // DELIMITERS
         if (ISCHR(*p,'D','d') && ISCHR(*(p+9),'S','s') && ISCHR(*(p+1),'E','e') && ISCHR(*(p+2),'L','l')
             && ISCHR(*(p+3),'I','i') && ISCHR(*(p+4),'M','m') && ISCHR(*(p+5),'I','i') && ISCHR(*(p+6),'T','t')
@@ -1183,7 +1183,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             }
             ++p;
             SKIPWS(p);
-            const QChar *n = p;
+            auto n = p;
             if (!SKIPTOWS(n, 0, true)) {
                 return false;
             }
@@ -1221,7 +1221,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             setFormat(index, length, fmts[F_DIRECTIVE]);
             p += 7;
             SKIPWS(p);
-            const QChar *n = p;
+            auto n = p;
             if (!SKIPTOWS(n, 0, true)) {
                 return false;
             }
@@ -1369,7 +1369,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
         // END
         else if (ISCHR(*p,'E','e') && ISCHR(*(p+2),'D','d') && ISCHR(*(p+1),'N','n')) {
             if (p == text.constData() || ISNL(*(p-1)) || ISSPACE(*(p-1))) {
-                if (*(p+3) == 0 || ISNL(*(p+3)) || ISSPACE(*(p+3))) {
+                if (*(p+3) == nullptr || ISNL(*(p+3)) || ISSPACE(*(p+3))) {
                     const int index = p-text.constData(), length = 3;
                     setFormat(index, length, fmts[F_OPTIONAL]);
                     p += 3;

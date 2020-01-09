@@ -1,6 +1,6 @@
-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.5
+include(common.pri)
 
-QT += xml widgets
+QT += xml
 
 TARGET = cg3ide
 TEMPLATE = app

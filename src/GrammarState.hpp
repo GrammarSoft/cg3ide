@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -24,9 +24,9 @@
 #define GRAMMARSTATE_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7
 
 #include <QtWidgets>
-#include <stdint.h>
+#include <cstdint>
 
-enum enum_state {
+enum enum_state : uint {
     S_NONE           =         0,
     S_TAGLIST        = (1 <<  0),
     S_TAGLIST_INLINE = (1 <<  1),
@@ -59,7 +59,7 @@ enum enum_state {
     S_WITH           = (1 << 28),
     S_WITHCHILD      = (1 << 29),
     S_ONCE_ALWAYS    = (1 << 30),
-    S_EXCEPT         = (1 << 31)
+    S_EXCEPT         = (1u << 31),
 };
 Q_DECLARE_FLAGS(State, enum_state)
 Q_FLAGS(State)

@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -33,7 +33,7 @@ class GotoLine : public QDialog {
     Q_OBJECT
     
 public:
-    explicit GotoLine(QWidget *parent = 0, QPlainTextEdit *editor = 0);
+    explicit GotoLine(QWidget *parent = nullptr, QPlainTextEdit *editor = nullptr);
     ~GotoLine();
 
 private slots:

@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2013, GrammarSoft ApS
-* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (http://grammarsoft.com/)
+* Copyright 2013-2020, GrammarSoft ApS
+* Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
 * This file is part of CG-3 IDE
@@ -42,7 +42,7 @@ Processor::Processor(const QString& paramname) :
 
     QFile paramf(paramname);
     if (!paramf.open(QIODevice::ReadOnly)) {
-        QMessageBox::critical(0, tr("Bad Param Data!"), tr("Could not read %1!").arg(paramname));
+        QMessageBox::critical(nullptr, tr("Bad Param Data!"), tr("Could not read %1!").arg(paramname));
         throw(-1);
     }
 
@@ -50,10 +50,10 @@ Processor::Processor(const QString& paramname) :
     paramt.setCodec("UTF-8");
 
     while (!paramt.atEnd()) {
-        QString tmp = paramt.readLine();
+        auto tmp = paramt.readLine();
         tmp = tmp.trimmed();
         if (!tmp.isEmpty() && tmp.at(0) != '#' && tmp.contains('\t')) {
-            QStringList ls = tmp.split('\t');
+            auto ls = tmp.split('\t');
             if (ls.at(0) == "binary") {
                 setBinary(ls.at(1));
             }
@@ -61,8 +61,8 @@ Processor::Processor(const QString& paramname) :
                 setGrammar(ls.at(1));
             }
             else if (ls.at(0) == "inputs") {
-                QStringList ss = ls.at(1).split("|");
-                foreach (QString s, ss) {
+                auto ss = ls.at(1).split("|");
+                for (auto& s : ss) {
                     addInputFile(s);
                 }
             }
@@ -107,7 +107,7 @@ void Processor::setBinary(const QString& b) {
 }
 
 void Processor::setGrammar(const QString& g) {
-    args = QStringList() << "-v" << "-C" << "UTF-8" << "-g" << g;
+    args = QStringList() << "-v" << "-g" << g;
 }
 
 void Processor::setPipe(const QString& p) {
@@ -167,7 +167,7 @@ void Processor::doIt() {
 }
 
 void Processor::timer_timeout() {
-    QProcess *p = pipe ? pipe.data() : process.data();
+    auto p = pipe ? pipe.data() : process.data();
 
     if (p->state() == 0) {
         ui->editLog->appendPlainText(tr("The pipe / process ended prematurely"));
@@ -186,7 +186,7 @@ void Processor::timer_timeout() {
         input_offset += pos;
     }
 
-    int written = p->write(input_buffer.data(), input_offset);
+    auto written = p->write(input_buffer.data(), input_offset);
     if (written == 0) {
     }
     else if (written == -1) {
@@ -201,7 +201,7 @@ void Processor::timer_timeout() {
     }
 
     if (!input.isOpen() && !inputs.empty()) {
-        QString file = inputs.front().filePath();
+        auto file = inputs.front().filePath();
         input.setFileName(file);
         if (!input.open(QIODevice::ReadOnly)) {
             ui->editLog->appendPlainText(tr("Failed to open input file %1").arg(file));
@@ -243,7 +243,7 @@ void Processor::process_finished(int code, QProcess::ExitStatus status) {
 
 void Processor::process_readyReadStandardOutput() {
     if (!output.isOpen() && !outputs.isEmpty()) {
-        QString file = output_name;
+        auto file = output_name;
         if (split) {
             file = QFileInfo(output_name).path() + outputs.front().fileName() + QFileInfo(output_name).fileName();
         }
@@ -334,15 +334,15 @@ int main(int argc, char *argv[]) {
 
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
-    QStringList args = app.arguments();
+    auto args = app.arguments();
     args.pop_front();
 
     if (args.empty()) {
-        QMessageBox::critical(0, "Missing params file!", "The first and only argument to this program must be a file with parameters!");
+        QMessageBox::critical(nullptr, "Missing params file!", "The first and only argument to this program must be a file with parameters!");
         return -1;
     }
 
-    Processor *w = new Processor(args.first());
+    auto w = new Processor(args.first());
     w->show();
 
     QTimer::singleShot(250, w, SLOT(doIt()));
