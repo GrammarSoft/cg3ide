@@ -225,7 +225,8 @@ inline bool ISSPACE(const QChar c) {
     return (c == 0x20 || c == 0x09 || c == 0x0A || c == 0x0D || c == 0xA0 || c.isSpace());
 }
 
-inline bool ISSTRING(const QChar *p, const uint32_t c) {
+template<typename Char>
+inline bool ISSTRING(const Char* p, const uint32_t c) {
     if (*(p-1) == '"' && *(p+c+1) == '"') {
         return true;
     }
@@ -251,6 +252,20 @@ inline bool ISESC(const QChar *p) {
         ++a;
     }
     return (a%2==0);
+}
+
+template<typename Char, typename C, size_t N>
+inline bool IS_ICASE(const Char* p, const C (&uc)[N], const C (&lc)[N]) {
+    // N - 1 due to null terminator for string constants
+    if (ISSTRING(p, N - 1)) {
+        return false;
+    }
+    for (size_t i = 0; i < N - 1; ++i) {
+        if (p[i] != uc[i] && p[i] != lc[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 inline bool ISCHR(const QChar p, const QChar a, const QChar b) {

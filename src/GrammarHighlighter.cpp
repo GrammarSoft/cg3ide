@@ -1214,9 +1214,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             return true;
         }
         // INCLUDE
-        else if (ISCHR(*p,'I','i') && ISCHR(*(p+6),'E','e') && ISCHR(*(p+1),'N','n') && ISCHR(*(p+2),'C','c')
-            && ISCHR(*(p+3),'L','l') && ISCHR(*(p+4),'U','u') && ISCHR(*(p+5),'D','d')
-            && !ISSTRING(p, 6)) {
+        else if (IS_ICASE(p, "INCLUDE", "include")) {
             const int index = p-text.constData(), length = 7;
             setFormat(index, length, fmts[F_DIRECTIVE]);
             p += 7;
@@ -1224,6 +1222,15 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             auto n = p;
             if (!SKIPTOWS(n, 0, true)) {
                 return false;
+            }
+            if (IS_ICASE(p, "STATIC", "static")) {
+                setFormat(p-text.constData(), n-p, fmts[F_DIRECTIVE]);
+                p = n;
+                SKIPWS(p);
+                n = p;
+                if (!SKIPTOWS(n, 0, true)) {
+                    return false;
+                }
             }
             setFormat(p-text.constData(), n-p, fmts[F_TAG]);
             p = n;
