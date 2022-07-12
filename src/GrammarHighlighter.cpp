@@ -104,6 +104,8 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
         p = ps.constData();
     }
 
+    size_t sz = 0;
+
     int oz = state->stack.size();
     size_t os = state->stack.back();
     const QChar *op = nullptr;
@@ -527,6 +529,20 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
                 const int index = p-text.constData();
                 setFormat(index, 7, fmts[F_RULE_FLAG]);
                 p += 7;
+                state->stack << S_RULE_FLAG;
+            }
+            else if (((sz = IS_ICASE(p, "OUTPUT", "output"))
+                     || (sz = IS_ICASE(p, "REPEAT", "repeat"))
+                     || (sz = IS_ICASE(p, "CAPTURE_UNIF", "capture_unif"))
+                     || (sz = IS_ICASE(p, "BEFORE", "before"))
+                     || (sz = IS_ICASE(p, "AFTER", "after"))
+                     || (sz = IS_ICASE(p, "IGNORED", "ignored"))
+                     || (sz = IS_ICASE(p, "LOOKIGNORED", "lookignored")))
+                     && !p[sz].isLetterOrNumber()
+                     ) {
+                auto index = p-text.constData();
+                setFormat(index, static_cast<int>(sz), fmts[F_RULE_FLAG]);
+                p += sz;
                 state->stack << S_RULE_FLAG;
             }
             else if (ISCHR(p[0], 'S', 's') && ISCHR(p[1], 'U', 'u') && ISCHR(p[2], 'B', 'b') && p[3] == ':' && (p[4].isDigit() || (p[4] == '-' && p[5].isDigit()))) {

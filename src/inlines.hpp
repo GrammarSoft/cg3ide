@@ -255,17 +255,17 @@ inline bool ISESC(const QChar *p) {
 }
 
 template<typename Char, typename C, size_t N>
-inline bool IS_ICASE(const Char* p, const C (&uc)[N], const C (&lc)[N]) {
+inline size_t IS_ICASE(const Char* p, const C (&uc)[N], const C (&lc)[N]) {
     // N - 1 due to null terminator for string constants
     if (ISSTRING(p, N - 1)) {
-        return false;
+        return 0;
     }
     for (size_t i = 0; i < N - 1; ++i) {
         if (p[i] != uc[i] && p[i] != lc[i]) {
-            return false;
+            return 0;
         }
     }
-    return true;
+    return N - 1;
 }
 
 inline bool ISCHR(const QChar p, const QChar a, const QChar b) {
