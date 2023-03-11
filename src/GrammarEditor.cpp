@@ -793,6 +793,14 @@ bool GrammarEditor::save(const QString& filename) {
     cur_file.lastModified();
     cur_file.size();
 
+    QFileInfo cg3p(filename + ".cg3p");
+    if (!cg3p.exists() || cg3p.isWritable()) {
+        QSettings state(cg3p.filePath(), QSettings::Format::IniFormat);
+        state.setValue("input_text", ui->editStdin->toPlainText());
+        state.setValue("input_files", ui->editInputFiles->toPlainText());
+        state.setValue("input_pipe", ui->editInputPipe->toPlainText());
+    }
+
     reTitle();
 
     return true;
@@ -822,6 +830,21 @@ void GrammarEditor::open(const QString& filename) {
     cur_file.created();
     cur_file.lastModified();
     cur_file.size();
+
+    QFileInfo cg3p(filename + ".cg3p");
+    if (cg3p.exists() && cg3p.isReadable()) {
+        QSettings state(cg3p.filePath(), QSettings::Format::IniFormat);
+        if (state.contains("input_text")) {
+            ui->editStdin->setPlainText(state.value("input_text").toString());
+        }
+        if (state.contains("input_files")) {
+            ui->editInputFiles->setPlainText(state.value("input_files").toString());
+        }
+        if (state.contains("input_pipe")) {
+            ui->editInputPipe->setPlainText(state.value("input_pipe").toString());
+        }
+        on_editInputPipe_textChanged();
+    }
 
     reTitle();
 }
