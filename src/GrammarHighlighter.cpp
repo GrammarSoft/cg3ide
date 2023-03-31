@@ -1,5 +1,5 @@
 /*
-* Copyright 2013-2020, GrammarSoft ApS
+* Copyright 2013-2023, GrammarSoft ApS
 * Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
@@ -321,20 +321,36 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
         }
         if (cs & S_BEFORE_AFTER) {
             state->stack.pop_back();
-            if (ISCHR(p[0], 'B', 'b') && ISCHR(p[1], 'E', 'e') && ISCHR(p[2], 'F', 'f') && ISCHR(p[3], 'O', 'o')
-                    && ISCHR(p[4], 'R', 'r') && ISCHR(p[5], 'E', 'e') && !p[6].isLetterOrNumber()) {
+            if (IS_ICASE(p, "BEFORE", "before") && !p[6].isLetterOrNumber()) {
                 const int index = p-text.constData();
                 setFormat(index, 6, fmts[F_DIRECTIVE]);
                 p += 6;
+                state->stack << S_WITHCHILD;
             }
-            else if (ISCHR(p[0], 'A', 'a') && ISCHR(p[1], 'F', 'f') && ISCHR(p[2], 'T', 't') && ISCHR(p[3], 'E', 'e')
-                     && ISCHR(p[4], 'R', 'r') && !p[5].isLetterOrNumber()) {
+            else if (IS_ICASE(p, "AFTER", "after") && !p[5].isLetterOrNumber()) {
                 const int index = p-text.constData();
                 setFormat(index, 5, fmts[F_DIRECTIVE]);
                 p += 5;
+                state->stack << S_WITHCHILD;
             }
             else {
                 state->stack << S_ERROR;
+            }
+            continue;
+        }
+        if (cs & S_BEFORE_AFTER_OPT) {
+            state->stack.pop_back();
+            if (IS_ICASE(p, "BEFORE", "before") && !p[6].isLetterOrNumber()) {
+                const int index = p-text.constData();
+                setFormat(index, 6, fmts[F_DIRECTIVE]);
+                p += 6;
+                state->stack << S_SET_INLINE;
+            }
+            else if (IS_ICASE(p, "AFTER", "after") && !p[5].isLetterOrNumber()) {
+                const int index = p-text.constData();
+                setFormat(index, 5, fmts[F_DIRECTIVE]);
+                p += 5;
+                state->stack << S_SET_INLINE;
             }
             continue;
         }
@@ -762,6 +778,16 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
             state->stack.pop_back();
             continue;
         }
+        if ((cs & S_BRACE_OPEN) && *p == '{') {
+            ++p;
+            state->stack.pop_back();
+            continue;
+        }
+        if ((cs & S_RULE_BLOCK) && *p == '}') {
+            ++p;
+            state->stack.pop_back();
+            continue;
+        }
         if ((cs & S_SQBRACKET_STOP) && *p == ']') {
             ++p;
             state->stack.pop_back();
@@ -772,7 +798,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
             state->stack.pop_back();
             continue;
         }
-        if ((cs == S_NONE || cs == S_RULE) && parseNone(text, p)) {
+        if ((cs == S_NONE || cs == S_RULE || cs == S_RULE_BLOCK) && parseNone(text, p)) {
             continue;
         }
         state->stack << S_ERROR;
@@ -1096,7 +1122,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             && ISCHR(*(p+7),'R','r')
             && !ISSTRING(p, 8)) {
             parseRuleDirective(text, p, 9);
-            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_RULE_FLAG;
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_WITHCHILD << S_RULE_FLAG;
             return true;
         }
         // ADDCOHORT
@@ -1264,14 +1290,14 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
         else if (ISCHR(*p,'M','m') && ISCHR(*(p+2),'P','p') && ISCHR(*(p+1),'A','a')
             && !ISSTRING(p, 2)) {
             parseRuleDirective(text, p, 3);
-            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_SET_INLINE << S_RULE_FLAG;
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_BEFORE_AFTER_OPT << S_SET_INLINE << S_RULE_FLAG;
             return true;
         }
         // ADD
         else if (ISCHR(*p,'A','a') && ISCHR(*(p+2),'D','d') && ISCHR(*(p+1),'D','d')
             && !ISSTRING(p, 2)) {
             parseRuleDirective(text, p, 3);
-            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_SET_INLINE << S_RULE_FLAG;
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_BEFORE_AFTER_OPT << S_SET_INLINE << S_RULE_FLAG;
             return true;
         }
         // APPEND
@@ -1298,6 +1324,24 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_RULE_FLAG;
             return true;
         }
+        // RESTORE
+        else if (IS_ICASE(p, "RESTORE", "restore")) {
+            parseRuleDirective(text, p, 7);
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_SET_INLINE << S_RULE_FLAG;
+            return true;
+        }
+        // PROTECT
+        else if (IS_ICASE(p, "PROTECT", "protect")) {
+            parseRuleDirective(text, p, 7);
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_RULE_FLAG;
+            return true;
+        }
+        // UNPROTECT
+        else if (IS_ICASE(p, "UNPROTECT", "unprotect")) {
+            parseRuleDirective(text, p, 9);
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_RULE_FLAG;
+            return true;
+        }
         // REPLACE
         else if (ISCHR(*p,'R','r') && ISCHR(*(p+6),'E','e') && ISCHR(*(p+1),'E','e') && ISCHR(*(p+2),'P','p')
             && ISCHR(*(p+3),'L','l') && ISCHR(*(p+4),'A','a') && ISCHR(*(p+5),'C','c')
@@ -1320,14 +1364,14 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             && ISCHR(*(p+7),'U','u') && ISCHR(*(p+8),'T','t')
             && !ISSTRING(p, 9)) {
             parseRuleDirective(text, p, 10);
-            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_SET_INLINE << S_SET_INLINE << S_RULE_FLAG;
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_BEFORE_AFTER_OPT << S_SET_INLINE << S_SET_INLINE << S_RULE_FLAG;
             return true;
         }
         // COPY
         else if (ISCHR(*p,'C','c') && ISCHR(*(p+3),'Y','y') && ISCHR(*(p+1),'O','o') && ISCHR(*(p+2),'P','p')
             && !ISSTRING(p, 3)) {
             parseRuleDirective(text, p, 4);
-            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_EXCEPT << S_SET_INLINE << S_RULE_FLAG;
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_BEFORE_AFTER_OPT << S_EXCEPT << S_SET_INLINE << S_RULE_FLAG;
             return true;
         }
         // JUMP
@@ -1350,6 +1394,18 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             && !ISSTRING(p, 5)) {
             parseRuleDirective(text, p, 6);
             state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_WITH << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_RULE_FLAG;
+            return true;
+        }
+        // MERGECOHORTS
+        else if (IS_ICASE(p, "MERGECOHORTS", "mergecohorts")) {
+            parseRuleDirective(text, p, 12);
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_WITH << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_SET_INLINE << S_RULE_FLAG;
+            return true;
+        }
+        // SPLITCOHORT
+        else if (IS_ICASE(p, "SPLITCOHORT", "splitcohort")) {
+            parseRuleDirective(text, p, 11);
+            state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_SET_INLINE << S_RULE_FLAG;
             return true;
         }
         // EXECUTE
@@ -1387,6 +1443,12 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             setFormat(index, length, fmts[F_DIRECTIVE]);
             p += 11;
             state->stack << (S_SEMICOLON|S_TAGLIST) << S_COMPOSITETAG << S_EQUALS;
+            return true;
+        }
+        // WITH
+        else if (IS_ICASE(p, "WITH", "with")) {
+            parseRuleDirective(text, p, 4);
+            state->stack << S_SEMICOLON << S_RULE_BLOCK << S_BRACE_OPEN << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_RULE_FLAG;
             return true;
         }
         // END

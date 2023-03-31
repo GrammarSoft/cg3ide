@@ -1,5 +1,5 @@
 /*
-* Copyright 2013-2020, GrammarSoft ApS
+* Copyright 2013-2023, GrammarSoft ApS
 * Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
@@ -347,6 +347,7 @@ inline bool ux_isSetOp(const QChar *it) {
         case '+':
         case '-':
         case '^':
+        case '\\':
         case 8745:
         case 8710:
             return true;

@@ -1,5 +1,5 @@
 /*
-* Copyright 2013-2020, GrammarSoft ApS
+* Copyright 2013-2023, GrammarSoft ApS
 * Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
@@ -26,7 +26,7 @@
 #include <QtWidgets>
 #include <cstdint>
 
-enum enum_state : uint {
+enum enum_state : uint64_t {
     S_NONE           =         0,
     S_TAGLIST        = (1 <<  0),
     S_TAGLIST_INLINE = (1 <<  1),
@@ -60,10 +60,11 @@ enum enum_state : uint {
     S_WITHCHILD      = (1 << 29),
     S_ONCE_ALWAYS    = (1 << 30),
     S_EXCEPT         = (1u << 31),
+    S_BEFORE_AFTER_OPT = (1ull << 32),
+    S_BRACE_OPEN     = (1ull << 33),
+    S_RULE_BLOCK     = (1ull << 34),
 };
-Q_DECLARE_FLAGS(State, enum_state)
-Q_FLAGS(State)
-Q_DECLARE_OPERATORS_FOR_FLAGS(State)
+using State = uint64_t;
 
 inline QString StateText(State state) {
     QString rv;
@@ -162,6 +163,15 @@ inline QString StateText(State state) {
     }
     if (state & S_RULE_FLAG) {
         rv.append("|S_RULE_FLAG");
+    }
+    if (state & S_BEFORE_AFTER_OPT) {
+        rv.append("|S_BEFORE_AFTER_OPT");
+    }
+    if (state & S_BRACE_OPEN) {
+        rv.append("|S_BRACE_OPEN");
+    }
+    if (state & S_RULE_BLOCK) {
+        rv.append("|S_RULES");
     }
     return rv.trimmed().replace(QRegExp("^\\|"), "");
 }
