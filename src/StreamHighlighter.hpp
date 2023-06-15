@@ -36,7 +36,7 @@ protected:
 
 private:
     struct Tag {
-        QRegExp rx;
+        QRegularExpression rx;
         QTextCharFormat fmt;
 
         Tag(const char *r) : rx(r) {
@@ -44,7 +44,7 @@ private:
     };
     QList<Tag> tagPatterns;
 
-    QList<QRegExp> rxs;
+    QList<QRegularExpression> rxs;
     QList<QTextCharFormat> fmts;
 };
 

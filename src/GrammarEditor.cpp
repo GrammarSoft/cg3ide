@@ -414,18 +414,19 @@ void GrammarEditor::checkGrammar_finished(int) {
     cur.clearSelection();
     cur.setPosition(0);
 
-    QList<QRegExp> rxs;
-    rxs.append(QRegExp("Line (\\d+):"));
-    rxs.append(QRegExp("Lines (\\d+) and (\\d+)"));
-    rxs.append(QRegExp("\\(L:(\\d+)\\)"));
-    rxs.append(QRegExp("on line (\\d+)"));
-    rxs.append(QRegExp("before line (\\d+)"));
+    QList<QRegularExpression> rxs;
+    rxs.append(QRegularExpression("Line (\\d+):"));
+    rxs.append(QRegularExpression("Lines (\\d+) and (\\d+)"));
+    rxs.append(QRegularExpression("\\(L:(\\d+)\\)"));
+    rxs.append(QRegularExpression("on line (\\d+)"));
+    rxs.append(QRegularExpression("before line (\\d+)"));
 
     auto lines = ui->editStderr->toPlainText().split("\n");
     for (auto& line : lines) {
         for (auto& rx : rxs) {
-            if (rx.indexIn(line) != -1) {
-                auto caps = rx.capturedTexts();
+            auto match = rx.match(line);
+            if (match.hasMatch()) {
+                auto caps = match.capturedTexts();
                 caps.pop_front();
                 for (auto& cap : caps) {
                     QTextEdit::ExtraSelection selection;
@@ -584,8 +585,9 @@ void GrammarEditor::previewOutRun_render() {
         for (int i=0 ; i<olines.size() ; ++i) {
             auto& text = olines[i];
             int index = 0;
-            if (rxReading.indexIn(text) != -1 && (index = rxReading2.indexIn(text)) != -1) {
-                index += rxReading2.matchedLength();
+            QRegularExpressionMatch match;
+            if (rxReading.match(text).hasMatch() && (match = rxReading2.match(text)).hasMatch()) {
+                index += match.capturedLength();
                 auto tags = text.mid(index).simplified().split(' ');
                 text = text.left(index);
                 auto oit = otags.begin();
@@ -701,10 +703,11 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
             cur.setPosition(start);
             cur.setPosition(stop, QTextCursor::KeepAnchor);
             auto tag = cur.selectedText().trimmed();
-            if (rxTrace.indexIn(tag) != -1) {
-                QRegExp rx(":(\\d+)\\b");
-                if (rx.indexIn(tag) && rx.cap(1).toInt() != 0) {
-                    editorGotoLine(ui->editGrammar, rx.cap(1).toInt()-1);
+            if (rxTrace.match(tag).hasMatch()) {
+                QRegularExpression rx(":(\\d+)\\b");
+                auto match = rx.match(tag);
+                if (match.hasMatch() && match.captured(1).toInt() != 0) {
+                    editorGotoLine(ui->editGrammar, match.captured(1).toInt()-1);
                     mouseEvent->accept();
                     return true;
                 }

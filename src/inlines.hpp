@@ -48,7 +48,7 @@
 #define CG_RESERVED_RX "\\b(" CG_RESERVED_OR ")\\b"
 
 #define CG_TRACE_RX "^(" CG_RULES_OR ")(\\(\\w+(,\\w+)?\\))?(:\\w+)+$"
-#define CG_READING_RX "^;?\\s+(\".+\")|(- )"
+#define CG_READING_RX "^;?\\s+?(\".+?\")|(- )"
 #define CG_READING_RX2 "^;?\\s+"
 
 template<typename T>
@@ -137,9 +137,10 @@ inline size_t queryCG3Version(const QString& filename) {
     }
 
     QString result = cg3p.readAll();
-    QRegExp rx("version \\d+\\.\\d+\\.\\d+\\.(\\d+)");
-    if (rx.indexIn(result) != -1) {
-        ver = QVariant(rx.capturedTexts().last()).toUInt();
+    QRegularExpression rx("version \\d+\\.\\d+\\.\\d+\\.(\\d+)");
+    QRegularExpressionMatch match;
+    if ((match = rx.match(result)).hasMatch()) {
+        ver = QVariant(match.captured(1)).toUInt();
     }
     return ver;
 }
@@ -218,11 +219,12 @@ inline QString findLatestCG3() {
     return latest.filePath();
 }
 
-inline bool ISSPACE(const QChar c) {
+inline bool ISSPACE(const QChar c_) {
+    auto c = c_.unicode();
     if (c <= 0xFF && c != 0x09 && c != 0x0A && c != 0x0D && c != 0x20 && c != 0xA0) {
         return false;
     }
-    return (c == 0x20 || c == 0x09 || c == 0x0A || c == 0x0D || c == 0xA0 || c.isSpace());
+    return (c == 0x20 || c == 0x09 || c == 0x0A || c == 0x0D || c == 0xA0 || c_.isSpace());
 }
 
 template<typename Char>
@@ -236,7 +238,8 @@ inline bool ISSTRING(const Char* p, const uint32_t c) {
     return false;
 }
 
-inline bool ISNL(const QChar c) {
+inline bool ISNL(const QChar c_) {
+    auto c = c_.unicode();
     return (
        c == 0x2028 // Unicode Line Seperator
     || c == 0x2029 // Unicode Paragraph Seperator
@@ -292,7 +295,7 @@ inline void SKIPLN(const QChar *& p) {
     ++p;
 }
 
-inline void SKIPWS(const QChar *& p, const QChar a = 0, const QChar b = 0) {
+inline void SKIPWS(const QChar *& p, const QChar a = QChar(0), const QChar b = QChar(0)) {
     while (*p != nullptr && *p != a && *p != b) {
         if (*p == '#' && !ISESC(p)) {
             SKIPLN(p);
@@ -304,7 +307,7 @@ inline void SKIPWS(const QChar *& p, const QChar a = 0, const QChar b = 0) {
     }
 }
 
-inline void SKIPTOWS(const QChar *& p, const QChar a = 0, const bool allowhash = false) {
+inline void SKIPTOWS(const QChar *& p, const QChar a = QChar(0), const bool allowhash = false) {
     while (*p != nullptr && !ISSPACE(*p)) {
         if (!allowhash && *p == '#' && !ISESC(p)) {
             SKIPLN(p);

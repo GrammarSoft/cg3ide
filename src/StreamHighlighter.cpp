@@ -25,10 +25,9 @@
 StreamHighlighter::StreamHighlighter(QTextDocument *parent) :
     QSyntaxHighlighter(parent)
 {
-    rxs.append(QRegExp("^\"<.*>\"$"));
-    rxs.append(QRegExp(CG_READING_RX));
-    rxs.last().setMinimal(true);
-    rxs.append(QRegExp(CG_READING_RX2));
+    rxs.append(QRegularExpression("^\"<.*>\"$"));
+    rxs.append(QRegularExpression(CG_READING_RX));
+    rxs.append(QRegularExpression(CG_READING_RX2));
 
     fmts.append(QTextCharFormat());
     fmts.last().setForeground(Qt::darkGreen);
@@ -46,19 +45,20 @@ StreamHighlighter::StreamHighlighter(QTextDocument *parent) :
 }
 
 void StreamHighlighter::highlightBlock(const QString &text) {
+    QRegularExpressionMatch match;
     int index = 0;
-    if ((index = rxs[0].indexIn(text)) != -1) {
+    if (rxs[0].match(text).hasMatch()) {
         setFormat(0, text.size(), fmts[0]);
     }
-    else if (rxs[1].indexIn(text) != -1 && (index = rxs[2].indexIn(text)) != -1) {
-        index += rxs[2].matchedLength();
+    else if (rxs[1].match(text).hasMatch() && (match = rxs[2].match(text)).hasMatch()) {
+        index += match.capturedLength(0);
         auto tags = text.mid(index).split(' ');
         auto glob = text.left(index);
         glob.reserve(text.length());
 
         for (auto& tag : tags) {
             for (int i=0 ; i<tagPatterns.size() ; ++i) {
-                if (tagPatterns[i].rx.indexIn(tag) != -1) {
+                if (tagPatterns[i].rx.match(tag).hasMatch()) {
                     setFormat(glob.length(), tag.length(), tagPatterns[i].fmt);
                     break;
                 }
