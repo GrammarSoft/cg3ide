@@ -24,6 +24,10 @@
 #define INLINES_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7
 
 #include <QtWidgets>
+#include <QRandomGenerator>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    #include <QtCore5Compat/QTextCodec>
+#endif
 #include <cstdint>
 
 #define CG_DIRECTIVES_OR "SETS|LIST|SET|DELIMITERS|SOFT-DELIMITERS|PREFERRED-TARGETS" \
@@ -48,7 +52,7 @@
 #define CG_RESERVED_RX "\\b(" CG_RESERVED_OR ")\\b"
 
 #define CG_TRACE_RX "^(" CG_RULES_OR ")(\\(\\w+(,\\w+)?\\))?(:\\w+)+$"
-#define CG_READING_RX "^;?\\s+(\".+\")|(- )"
+#define CG_READING_RX "^;?\\s+?(\".+?\")|(- )"
 #define CG_READING_RX2 "^;?\\s+"
 
 template<typename T>
@@ -91,6 +95,14 @@ inline void editorGotoLine(QPlainTextEdit *editor, int line=0) {
     editor->setFocus();
 }
 
+inline void setEncoding(QTextStream& stream) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    stream.setCodec("UTF-8");
+#else
+    stream.setEncoding(QStringConverter::Utf8);
+#endif
+}
+
 inline QString fileGetContents(const QString& name, qint64 max = 0) {
     QFile file(name);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -99,7 +111,7 @@ inline QString fileGetContents(const QString& name, qint64 max = 0) {
     }
 
     QTextStream in(&file);
-    in.setCodec("UTF-8");
+    setEncoding(in);
     in.setAutoDetectUnicode(true);
     if (max) {
         return in.read(max);
@@ -116,7 +128,7 @@ inline bool filePutContents(const QString& name, const QString& data) {
     }
 
     QTextStream out(&file);
-    out.setCodec("UTF-8");
+    setEncoding(out);
     out << data;
     out.flush();
     file.close();
@@ -137,9 +149,10 @@ inline size_t queryCG3Version(const QString& filename) {
     }
 
     QString result = cg3p.readAll();
-    QRegExp rx("version \\d+\\.\\d+\\.\\d+\\.(\\d+)");
-    if (rx.indexIn(result) != -1) {
-        ver = QVariant(rx.capturedTexts().last()).toUInt();
+    QRegularExpression rx("version \\d+\\.\\d+\\.\\d+\\.(\\d+)");
+    QRegularExpressionMatch match;
+    if ((match = rx.match(result)).hasMatch()) {
+        ver = QVariant(match.captured(1)).toUInt();
     }
     return ver;
 }
@@ -218,11 +231,12 @@ inline QString findLatestCG3() {
     return latest.filePath();
 }
 
-inline bool ISSPACE(const QChar c) {
+inline bool ISSPACE(const QChar c_) {
+    auto c = c_.unicode();
     if (c <= 0xFF && c != 0x09 && c != 0x0A && c != 0x0D && c != 0x20 && c != 0xA0) {
         return false;
     }
-    return (c == 0x20 || c == 0x09 || c == 0x0A || c == 0x0D || c == 0xA0 || c.isSpace());
+    return (c == 0x20 || c == 0x09 || c == 0x0A || c == 0x0D || c == 0xA0 || c_.isSpace());
 }
 
 template<typename Char>
@@ -236,7 +250,8 @@ inline bool ISSTRING(const Char* p, const uint32_t c) {
     return false;
 }
 
-inline bool ISNL(const QChar c) {
+inline bool ISNL(const QChar c_) {
+    auto c = c_.unicode();
     return (
        c == 0x2028 // Unicode Line Seperator
     || c == 0x2029 // Unicode Paragraph Seperator
@@ -292,7 +307,7 @@ inline void SKIPLN(const QChar *& p) {
     ++p;
 }
 
-inline void SKIPWS(const QChar *& p, const QChar a = 0, const QChar b = 0) {
+inline void SKIPWS(const QChar *& p, const QChar a = QChar(0), const QChar b = QChar(0)) {
     while (*p != nullptr && *p != a && *p != b) {
         if (*p == '#' && !ISESC(p)) {
             SKIPLN(p);
@@ -304,7 +319,7 @@ inline void SKIPWS(const QChar *& p, const QChar a = 0, const QChar b = 0) {
     }
 }
 
-inline void SKIPTOWS(const QChar *& p, const QChar a = 0, const bool allowhash = false) {
+inline void SKIPTOWS(const QChar *& p, const QChar a = QChar(0), const bool allowhash = false) {
     while (*p != nullptr && !ISSPACE(*p)) {
         if (!allowhash && *p == '#' && !ISESC(p)) {
             SKIPLN(p);

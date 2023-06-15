@@ -47,8 +47,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    qsrand(static_cast<uint>(time(nullptr)));
-
     auto args = app.arguments();
     args.pop_front();
 

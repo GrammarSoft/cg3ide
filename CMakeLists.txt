@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
+cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 project(cg3ide CXX)
 
 # Release or Debug
@@ -10,11 +11,15 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_MACOSX_RPATH ON)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 include(GNUInstallDirs)
 
 if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8 /std:c++latest /permissive- /W4 /EHsc /MP")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /Ox /Ot /GL /GS-")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8 /std:c++latest /Zc:__cplusplus /permissive- /W4 /MP")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
 else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-deprecated")
@@ -25,7 +30,7 @@ else()
 	include(CheckCXXCompilerFlag)
 
 	# Require latest possible C++ standard
-	foreach(flag "-std=c++20" "-std=c++2a" "-std=c++17" "-std=c++1z" "-std=c++14" "-std=c++1y")
+	foreach(flag "-std=c++23" "-std=c++2b" "-std=c++20" "-std=c++2a" "-std=c++17")
 		string(REGEX REPLACE "[^a-z0-9]" "-" _flag ${flag})
 		CHECK_CXX_COMPILER_FLAG(${flag} COMPILER_SUPPORTS_${_flag})
 		if(COMPILER_SUPPORTS_${_flag})
@@ -35,18 +40,23 @@ else()
 		endif()
 	endforeach()
 	if(NOT _ENABLED_CXX)
-		message(FATAL_ERROR "Could not enable at least C++14 (C++1y) - upgrade your compiler")
+		message(FATAL_ERROR "Could not enable at least C++17 - upgrade your compiler")
 	endif()
 endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5Widgets REQUIRED)
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-add_definitions(${Qt5Widgets_DEFINITIONS})
-add_definitions(-DQT_DEPRECATED_WARNINGS -DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+set(QT_LIBS Qt${QT_VERSION_MAJOR}::Widgets)
+
+if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+	find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core5Compat)
+	set(QT_LIBS ${QT_LIBS} Qt${QT_VERSION_MAJOR}::Core5Compat)
+endif()
+
+add_definitions(-DQT_DEPRECATED_WARNINGS -DQT_DISABLE_DEPRECATED_BEFORE=0x051100)
 
 if(WIN32)
 	add_definitions(-DUNICODE -D_UNICODE -D_SECURE_SCL=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_CRT_SECURE_NO_DEPRECATE -DWIN32_LEAN_AND_MEAN -DVC_EXTRALEAN -DNOMINMAX)

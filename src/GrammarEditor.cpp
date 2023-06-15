@@ -40,7 +40,7 @@ GrammarEditor::GrammarEditor(QWidget *parent) :
     cur_file_check(false)
 
 {
-    QTemporaryFile tmpf(QDir(QDir::tempPath()).filePath("cg3ide-XXXXXX-") + QVariant(qrand()).toString());
+    QTemporaryFile tmpf(QDir(QDir::tempPath()).filePath("cg3ide-XXXXXX-") + QVariant(QRandomGenerator::global()->generate64()).toString());
     if (tmpf.open()) {
         checker.txtGrammar = tmpf.fileName() + ".cg3";
         checker.binGrammar = tmpf.fileName() + ".cg3b";
@@ -62,15 +62,15 @@ GrammarEditor::GrammarEditor(QWidget *parent) :
     restoreGeometry(settings.value("editor/geometry").toByteArray());
     restoreState(settings.value("editor/state").toByteArray());
 
-    auto tabwidth = QFontMetrics(ui->editGrammar->font()).width('x')*3;
-    ui->editGrammar->setTabStopWidth(tabwidth);
-    tabwidth = QFontMetrics(ui->editStdin->font()).width('x')*3;
-    ui->editStdin->setTabStopWidth(tabwidth);
-    ui->editStdinPreview->setTabStopWidth(tabwidth);
-    ui->editStdout->setTabStopWidth(tabwidth);
-    ui->editStderr->setTabStopWidth(tabwidth);
-    ui->editStderrPreviewInput->setTabStopWidth(tabwidth);
-    ui->editStderrPreviewOutput->setTabStopWidth(tabwidth);
+    auto tabwidth = QFontMetrics(ui->editGrammar->font()).horizontalAdvance('x')*3;
+    ui->editGrammar->setTabStopDistance(tabwidth);
+    tabwidth = QFontMetrics(ui->editStdin->font()).horizontalAdvance('x')*3;
+    ui->editStdin->setTabStopDistance(tabwidth);
+    ui->editStdinPreview->setTabStopDistance(tabwidth);
+    ui->editStdout->setTabStopDistance(tabwidth);
+    ui->editStderr->setTabStopDistance(tabwidth);
+    ui->editStderrPreviewInput->setTabStopDistance(tabwidth);
+    ui->editStderrPreviewOutput->setTabStopDistance(tabwidth);
 
     ui->actWrapGrammar->setChecked(settings.value("editor/wrapgrammar", true).toBool());
     ui->actWrapIO->setChecked(settings.value("editor/wrapio", false).toBool());
@@ -211,22 +211,22 @@ void GrammarEditor::reOptions() {
     if (settings.contains("editor/font")) {
         QFont f = settings.value("editor/font", "Courier,10,-1,5,50,0,0,0,0,0").value<QFont>();
         ui->editGrammar->setFont(f);
-        ui->editGrammar->setTabStopWidth(QFontMetrics(f).width('x')*3);
+        ui->editGrammar->setTabStopDistance(QFontMetrics(f).horizontalAdvance('x')*3);
 
         f.setPointSize(f.pointSize()-1);
-        auto tabwidth = QFontMetrics(f).width('x')*3;
+        auto tabwidth = QFontMetrics(f).horizontalAdvance('x')*3;
         ui->editStdin->setFont(f);
-        ui->editStdin->setTabStopWidth(tabwidth);
+        ui->editStdin->setTabStopDistance(tabwidth);
         ui->editStdinPreview->setFont(f);
-        ui->editStdinPreview->setTabStopWidth(tabwidth);
+        ui->editStdinPreview->setTabStopDistance(tabwidth);
         ui->editStdout->setFont(f);
-        ui->editStdout->setTabStopWidth(tabwidth);
+        ui->editStdout->setTabStopDistance(tabwidth);
         ui->editStderr->setFont(f);
-        ui->editStderr->setTabStopWidth(tabwidth);
+        ui->editStderr->setTabStopDistance(tabwidth);
         ui->editStderrPreviewInput->setFont(f);
-        ui->editStderrPreviewInput->setTabStopWidth(tabwidth);
+        ui->editStderrPreviewInput->setTabStopDistance(tabwidth);
         ui->editStderrPreviewOutput->setFont(f);
-        ui->editStderrPreviewOutput->setTabStopWidth(tabwidth);
+        ui->editStderrPreviewOutput->setTabStopDistance(tabwidth);
 
         settingSetOrDef(settings, "editor/font", QString("Courier,10,-1,5,50,0,0,0,0,0"), ui->editGrammar->font().toString());
     }
@@ -260,7 +260,7 @@ void GrammarEditor::reOptions() {
     QFileInfo cg3bin(settings.value("cg3/binary", "").toString());
     QFileInfo convbin(cg3bin.dir().filePath("cg-conv"));
     if (!convbin.isExecutable()) {
-        convbin = cg3bin.dir().filePath("cg-conv.exe");
+        convbin.setFile(cg3bin.dir().filePath("cg-conv.exe"));
     }
     if (ui->editInputPipe->find("{AUTO-CG-CONV}")) {
         QTextCursor tc = ui->editInputPipe->textCursor();
@@ -401,7 +401,7 @@ void GrammarEditor::checkGrammar() {
 void GrammarEditor::checkGrammar_finished(int) {
     QSettings settings;
     QTextStream log(checker.process.data());
-    log.setCodec("UTF-8");
+    setEncoding(log);
     ui->editStderr->setPlainText(log.readAll());
     auto vz = ui->tableErrors->verticalScrollBar()->value(), hz = ui->tableErrors->horizontalScrollBar()->value();
 
@@ -414,18 +414,19 @@ void GrammarEditor::checkGrammar_finished(int) {
     cur.clearSelection();
     cur.setPosition(0);
 
-    QList<QRegExp> rxs;
-    rxs.append(QRegExp("Line (\\d+):"));
-    rxs.append(QRegExp("Lines (\\d+) and (\\d+)"));
-    rxs.append(QRegExp("\\(L:(\\d+)\\)"));
-    rxs.append(QRegExp("on line (\\d+)"));
-    rxs.append(QRegExp("before line (\\d+)"));
+    QList<QRegularExpression> rxs;
+    rxs.append(QRegularExpression("Line (\\d+):"));
+    rxs.append(QRegularExpression("Lines (\\d+) and (\\d+)"));
+    rxs.append(QRegularExpression("\\(L:(\\d+)\\)"));
+    rxs.append(QRegularExpression("on line (\\d+)"));
+    rxs.append(QRegularExpression("before line (\\d+)"));
 
     auto lines = ui->editStderr->toPlainText().split("\n");
     for (auto& line : lines) {
         for (auto& rx : rxs) {
-            if (rx.indexIn(line) != -1) {
-                auto caps = rx.capturedTexts();
+            auto match = rx.match(line);
+            if (match.hasMatch()) {
+                auto caps = match.capturedTexts();
                 caps.pop_front();
                 for (auto& cap : caps) {
                     QTextEdit::ExtraSelection selection;
@@ -584,8 +585,9 @@ void GrammarEditor::previewOutRun_render() {
         for (int i=0 ; i<olines.size() ; ++i) {
             auto& text = olines[i];
             int index = 0;
-            if (rxReading.indexIn(text) != -1 && (index = rxReading2.indexIn(text)) != -1) {
-                index += rxReading2.matchedLength();
+            QRegularExpressionMatch match;
+            if (rxReading.match(text).hasMatch() && (match = rxReading2.match(text)).hasMatch()) {
+                index += match.capturedLength();
                 auto tags = text.mid(index).simplified().split(' ');
                 text = text.left(index);
                 auto oit = otags.begin();
@@ -597,7 +599,7 @@ void GrammarEditor::previewOutRun_render() {
                     }
                     text.append(tag).append(' ');
                 }
-                text.replace(QRegExp("(\\s+)- (- )+"), "\\1- ");
+                text.replace(QRegularExpression("(\\s+)- (- )+"), "\\1- ");
                 otags = tags;
             }
             else {
@@ -617,7 +619,7 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
     if (event->type() == QEvent::WindowActivate && !cur_file_check && !ui->editGrammar->document()->isModified()) {
         QFileInfo check(cur_file.filePath());
         if (check.exists()) {
-            if (cur_file == check && (cur_file.created() != check.created() || cur_file.lastModified() != check.lastModified() || cur_file.size() != check.size())) {
+            if (cur_file == check && (cur_file.birthTime() != check.birthTime() || cur_file.lastModified() != check.lastModified() || cur_file.size() != check.size())) {
                 cur_file_check = true;
                 int yesno = QMessageBox::question(this, tr("Reload changed file?"), tr("The file %1 has changed on disk since last save. Do you want to reload it? Any changes made here will be lost.").arg(check.filePath()), QMessageBox::Yes, QMessageBox::No);
                 if (yesno == QMessageBox::Yes) {
@@ -701,10 +703,11 @@ bool GrammarEditor::eventFilter(QObject *watched, QEvent *event) {
             cur.setPosition(start);
             cur.setPosition(stop, QTextCursor::KeepAnchor);
             auto tag = cur.selectedText().trimmed();
-            if (rxTrace.indexIn(tag) != -1) {
-                QRegExp rx(":(\\d+)\\b");
-                if (rx.indexIn(tag) && rx.cap(1).toInt() != 0) {
-                    editorGotoLine(ui->editGrammar, rx.cap(1).toInt()-1);
+            if (rxTrace.match(tag).hasMatch()) {
+                QRegularExpression rx(":(\\d+)\\b");
+                auto match = rx.match(tag);
+                if (match.hasMatch() && match.captured(1).toInt() != 0) {
+                    editorGotoLine(ui->editGrammar, match.captured(1).toInt()-1);
                     mouseEvent->accept();
                     return true;
                 }
@@ -773,7 +776,7 @@ bool GrammarEditor::save(const QString& filename) {
             return false;
         }
 
-        if (cur_file == check && (cur_file.created() != check.created() || cur_file.lastModified() != check.lastModified() || cur_file.size() != check.size())) {
+        if (cur_file == check && (cur_file.birthTime() != check.birthTime() || cur_file.lastModified() != check.lastModified() || cur_file.size() != check.size())) {
             int yesno = QMessageBox::question(this, tr("Overwrite changed file?"), tr("The file %1 has changed on disk since last save. Do you want to overwrite it with the current grammar?").arg(filename), QMessageBox::Yes, QMessageBox::No);
             if (yesno != QMessageBox::Yes) {
                 return false;
@@ -789,7 +792,7 @@ bool GrammarEditor::save(const QString& filename) {
 
     cur_file.setFile(filename);
     cur_file.refresh();
-    cur_file.created();
+    cur_file.birthTime();
     cur_file.lastModified();
     cur_file.size();
 
@@ -827,7 +830,7 @@ void GrammarEditor::open(const QString& filename) {
 
     cur_file.setFile(filename);
     cur_file.refresh();
-    cur_file.created();
+    cur_file.birthTime();
     cur_file.lastModified();
     cur_file.size();
 
@@ -912,8 +915,8 @@ void GrammarEditor::on_actFindReplace_triggered() {
     ui->frameFindReplace->show();
     auto selected = ui->editGrammar->textCursor().selection().toPlainText();
     if (!selected.isEmpty()) {
-        if (ui->optFindRegex->isChecked()) {
-            selected = QRegExp::escape(selected);
+        if (!ui->optFindRegex->isChecked()) {
+            selected = QRegularExpression::escape(selected);
         }
         ui->editFind->setText(selected);
     }
@@ -927,19 +930,26 @@ void GrammarEditor::on_actFindNext_triggered() {
         return on_actFindReplace_triggered();
     }
 
-    QRegExp find(ui->editFind->text(),
-                 ui->optFindCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive,
-                 ui->optFindRegex->isChecked() ? QRegExp::RegExp2 : QRegExp::FixedString);
+    auto p = ui->editFind->text();
+    if (!ui->optFindRegex->isChecked()) {
+        p = QRegularExpression::escape(p);
+    }
+    QTextDocument::FindFlags ff = QTextDocument::FindCaseSensitively;
+    QRegularExpression::PatternOptions opts = QRegularExpression::InvertedGreedinessOption;
+    if (!ui->optFindCase->isChecked()) {
+        ff &= ~QTextDocument::FindCaseSensitively;
+        opts |= QRegularExpression::CaseInsensitiveOption;
+    }
+    QRegularExpression find(p, opts);
     if (!find.isValid()) {
         return;
     }
-    find.setMinimal(true);
 
     const auto& cur = ui->editGrammar->textCursor();
-    auto res = ui->editGrammar->document()->find(find, cur);
+    auto res = ui->editGrammar->document()->find(find, cur, ff);
 
     if (res.isNull()) {
-        res = ui->editGrammar->document()->find(find);
+        res = ui->editGrammar->document()->find(find, 0, ff);
     }
     if (!res.isNull()) {
         ui->editGrammar->setTextCursor(res);
@@ -954,19 +964,26 @@ void GrammarEditor::on_actFindPrev_triggered() {
         return on_actFindReplace_triggered();
     }
 
-    QRegExp find(ui->editFind->text(),
-                 ui->optFindCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive,
-                 ui->optFindRegex->isChecked() ? QRegExp::RegExp2 : QRegExp::FixedString);
+    auto p = ui->editFind->text();
+    if (!ui->optFindRegex->isChecked()) {
+        p = QRegularExpression::escape(p);
+    }
+    QTextDocument::FindFlags ff = QTextDocument::FindBackward | QTextDocument::FindCaseSensitively;
+    QRegularExpression::PatternOptions opts = QRegularExpression::InvertedGreedinessOption;
+    if (!ui->optFindCase->isChecked()) {
+        ff &= ~QTextDocument::FindCaseSensitively;
+        opts |= QRegularExpression::CaseInsensitiveOption;
+    }
+    QRegularExpression find(p, opts);
     if (!find.isValid()) {
         return;
     }
-    find.setMinimal(true);
 
     const auto& cur = ui->editGrammar->textCursor();
-    auto res = ui->editGrammar->document()->find(find, cur, QTextDocument::FindBackward);
+    auto res = ui->editGrammar->document()->find(find, cur, ff);
 
     if (res.isNull()) {
-        res = ui->editGrammar->document()->find(find, ui->editGrammar->document()->characterCount(), QTextDocument::FindBackward);
+        res = ui->editGrammar->document()->find(find, ui->editGrammar->document()->characterCount(), ff);
     }
     if (!res.isNull()) {
         ui->editGrammar->setTextCursor(res);
@@ -981,20 +998,27 @@ void GrammarEditor::on_actReplaceOnce_triggered() {
         return on_actFindReplace_triggered();
     }
 
-    QRegExp find(ui->editFind->text(),
-                 ui->optFindCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive,
-                 ui->optFindRegex->isChecked() ? QRegExp::RegExp2 : QRegExp::FixedString);
+    auto p = ui->editFind->text();
+    if (!ui->optFindRegex->isChecked()) {
+        p = QRegularExpression::escape(p);
+    }
+    QTextDocument::FindFlags ff = QTextDocument::FindCaseSensitively;
+    QRegularExpression::PatternOptions opts = QRegularExpression::InvertedGreedinessOption;
+    if (!ui->optFindCase->isChecked()) {
+        ff &= ~QTextDocument::FindCaseSensitively;
+        opts |= QRegularExpression::CaseInsensitiveOption;
+    }
+    QRegularExpression find(p, opts);
     if (!find.isValid()) {
         return;
     }
-    find.setMinimal(true);
 
     auto cur = ui->editGrammar->textCursor();
     cur.beginEditBlock();
-    auto res = ui->editGrammar->document()->find(find, cur.selectionStart());
+    auto res = ui->editGrammar->document()->find(find, cur.selectionStart(), ff);
 
     if (res.isNull()) {
-        res = ui->editGrammar->document()->find(find);
+        res = ui->editGrammar->document()->find(find, 0, ff);
     }
     if (!res.isNull()) {
         QString text = res.selectedText();
@@ -1016,17 +1040,24 @@ void GrammarEditor::on_actReplaceAll_triggered() {
         return on_actFindReplace_triggered();
     }
 
-    QRegExp find(ui->editFind->text(),
-                 ui->optFindCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive,
-                 ui->optFindRegex->isChecked() ? QRegExp::RegExp2 : QRegExp::FixedString);
+    auto p = ui->editFind->text();
+    if (!ui->optFindRegex->isChecked()) {
+        p = QRegularExpression::escape(p);
+    }
+    QTextDocument::FindFlags ff = QTextDocument::FindCaseSensitively;
+    QRegularExpression::PatternOptions opts = QRegularExpression::InvertedGreedinessOption;
+    if (!ui->optFindCase->isChecked()) {
+        ff &= ~QTextDocument::FindCaseSensitively;
+        opts |= QRegularExpression::CaseInsensitiveOption;
+    }
+    QRegularExpression find(p, opts);
     if (!find.isValid()) {
         return;
     }
-    find.setMinimal(true);
 
     auto cur = ui->editGrammar->textCursor();
     cur.beginEditBlock();
-    auto res = ui->editGrammar->document()->find(find, cur.selectionStart());
+    auto res = ui->editGrammar->document()->find(find, cur.selectionStart(), ff);
 
     while (!res.isNull()) {
         auto text = res.selectedText();
@@ -1034,7 +1065,7 @@ void GrammarEditor::on_actReplaceAll_triggered() {
         res.removeSelectedText();
         cur.setPosition(res.selectionStart());
         cur.insertText(text);
-        res = ui->editGrammar->document()->find(find, cur.selectionStart()+text.length());
+        res = ui->editGrammar->document()->find(find, cur.selectionStart()+text.length(), ff);
     }
 
     cur.endEditBlock();
@@ -1056,15 +1087,20 @@ void GrammarEditor::on_editFind_textEdited() {
     ui->editFind->setToolTip("");
 
     findSelections.clear();
-    QRegExp find(ui->editFind->text(),
-                 ui->optFindCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive,
-                 ui->optFindRegex->isChecked() ? QRegExp::RegExp2 : QRegExp::FixedString);
+    auto p = ui->editFind->text();
+    if (!ui->optFindRegex->isChecked()) {
+        p = QRegularExpression::escape(p);
+    }
+    QRegularExpression::PatternOptions opts = QRegularExpression::InvertedGreedinessOption;
+    if (!ui->optFindCase->isChecked()) {
+        opts |= QRegularExpression::CaseInsensitiveOption;
+    }
+    QRegularExpression find(p, opts);
     if (!find.isValid()) {
         ui->editFind->setStyleSheet("background-color: #fbb");
         ui->editFind->setToolTip(tr("Regex Error: ") + find.errorString());
         return;
     }
-    find.setMinimal(true);
 
     QTextEdit::ExtraSelection selection;
     auto lineColor = QColor(Qt::green).lighter(160);
@@ -1074,12 +1110,12 @@ void GrammarEditor::on_editFind_textEdited() {
     auto s = ui->editGrammar->cursorForPosition(QPoint(0,0)), e = ui->editGrammar->cursorForPosition(QPoint(ui->editGrammar->viewport()->width(), ui->editGrammar->viewport()->height()));
 
     auto text = ui->editGrammar->toPlainText().mid(s.position(), e.position() - s.position());
-    int pos = 0;
-    while ((pos = find.indexIn(text, pos)) != -1) {
-        selection.cursor.setPosition(pos + s.position());
-        selection.cursor.setPosition(pos + s.position() + find.matchedLength(), QTextCursor::KeepAnchor);
+    auto matches = find.globalMatch(text);
+    while (matches.hasNext()) {
+        auto match = matches.next();
+        selection.cursor.setPosition(s.position() + match.capturedStart(0));
+        selection.cursor.setPosition(s.position() + match.capturedEnd(0), QTextCursor::KeepAnchor);
         findSelections.append(selection);
-        pos += std::max(find.matchedLength(), 1);
     }
 
     on_editGrammar_cursorPositionChanged();
@@ -1147,7 +1183,7 @@ void GrammarEditor::on_btnOutputFind_clicked(bool) {
 }
 
 void GrammarEditor::on_btnRunProcess_clicked(bool) {
-    QTemporaryFile tmpf(QDir(QDir::tempPath()).filePath("cg3ide-XXXXXX-") + QVariant(qrand()).toString());
+    QTemporaryFile tmpf(QDir(QDir::tempPath()).filePath("cg3ide-XXXXXX-") + QVariant(QRandomGenerator::global()->generate64()).toString());
     if (!tmpf.open()) {
         QMessageBox::critical(this, tr("Creating temporaries failed!"), tr("Failed to create temporary files! Make sure you have write access to the temporary folder."));
         return;
@@ -1162,7 +1198,7 @@ void GrammarEditor::on_btnRunProcess_clicked(bool) {
 
     QStringList inputs;
     if (ui->optPipeText->isChecked()) {
-        QString name = tmpf.fileName() + "-input.txt";
+        auto name = tmpf.fileName() + "-input.txt";
         tmpf.remove();
         filePutContents(name, ui->editStdin->toPlainText());
         inputs << name;
@@ -1315,7 +1351,7 @@ void GrammarEditor::on_actZoomIn_triggered() {
         f.setPointSize(f.pointSize()+1);
         w->setFont(f);
         if (pte) {
-            pte->setTabStopWidth(QFontMetrics(f).width('x')*3);
+            pte->setTabStopDistance(QFontMetrics(f).horizontalAdvance('x')*3);
         }
         return;
     }
@@ -1330,7 +1366,7 @@ void GrammarEditor::on_actZoomOut_triggered() {
         f.setPointSize(std::max(f.pointSize()-1, 1));
         w->setFont(f);
         if (pte) {
-            pte->setTabStopWidth(QFontMetrics(f).width('x')*3);
+            pte->setTabStopDistance(QFontMetrics(f).horizontalAdvance('x')*3);
         }
         return;
     }

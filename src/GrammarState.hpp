@@ -173,7 +173,7 @@ inline QString StateText(State state) {
     if (state & S_RULE_BLOCK) {
         rv.append("|S_RULES");
     }
-    return rv.trimmed().replace(QRegExp("^\\|"), "");
+    return rv.trimmed().replace(QRegularExpression("^\\|"), "");
 }
 
 class GrammarState : public QTextBlockUserData {

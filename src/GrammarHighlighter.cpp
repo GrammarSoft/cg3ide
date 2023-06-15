@@ -832,7 +832,7 @@ bool GrammarHighlighter::parseTag(const QString& text, const QChar *& p) {
     if (warn_space) {
         QString tag = text.mid(index, length);
         if (tag.count('"') >= 3) {
-            state->warnings.insert(qMakePair(index, length), tr("Sure you didn't mean %1 (missing quote)? Can silence with \\ before the space.").arg(tag.replace(QRegExp("\\s\""), "\" \"")));
+            state->warnings.insert(qMakePair(index, length), tr("Sure you didn't mean %1 (missing quote)? Can silence with \\ before the space.").arg(tag.replace(QRegularExpression("\\s\""), "\" \"")));
         }
     }
 
@@ -882,7 +882,7 @@ bool GrammarHighlighter::parseTagList(const QString& text, const QChar *& p) {
 
 bool GrammarHighlighter::parseAnchorish(const QString& text, const QChar *& p) {
     auto n = p;
-    if (!SKIPTOWS(n, 0, true)) {
+    if (!SKIPTOWS(n, QChar(0), true)) {
         return false;
     }
     const int index = p-text.constData();
@@ -1226,7 +1226,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             ++p;
             SKIPWS(p);
             auto n = p;
-            if (!SKIPTOWS(n, 0, true)) {
+            if (!SKIPTOWS(n, QChar(0), true)) {
                 return false;
             }
             if (n == p+3 && (ISCHR(*p,'L','l') || ISCHR(*p,'R','r')) && ISCHR(*(p+1),'T','t') && (ISCHR(*(p+2),'R','r') || ISCHR(*(p+2),'L','l'))) {
@@ -1262,7 +1262,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
             p += 7;
             SKIPWS(p);
             auto n = p;
-            if (!SKIPTOWS(n, 0, true)) {
+            if (!SKIPTOWS(n, QChar(0), true)) {
                 return false;
             }
             if (IS_ICASE(p, "STATIC", "static")) {
@@ -1270,7 +1270,7 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
                 p = n;
                 SKIPWS(p);
                 n = p;
-                if (!SKIPTOWS(n, 0, true)) {
+                if (!SKIPTOWS(n, QChar(0), true)) {
                     return false;
                 }
             }

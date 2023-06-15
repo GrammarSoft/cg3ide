@@ -133,7 +133,7 @@ private:
     QList<QTextEdit::ExtraSelection> errorSelections, findSelections;
     QStandardItemModel errorEntries;
     QScopedPointer<StreamHighlighter> stxInput, stxInputPreview, stxOutput;
-    QRegExp rxTrace, rxReading, rxReading2;
+    QRegularExpression rxTrace, rxReading, rxReading2;
     QString stdout_raw;
     QComboBox *section_jump;
     bool previewIn_dirty, previewIn_run;

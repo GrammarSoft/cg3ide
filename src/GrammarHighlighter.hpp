@@ -63,8 +63,8 @@ public:
     QVector<QStringList> fmt_desc;
 
 private:
-    inline bool SKIPWS(const QChar *& p, const QChar a = 0, const QChar b = 0);
-    inline bool SKIPTOWS(const QChar *& p, const QChar a = 0, const bool allowhash = false);
+    inline bool SKIPWS(const QChar *& p, const QChar a = QChar(0), const QChar b = QChar(0));
+    inline bool SKIPTOWS(const QChar *& p, const QChar a = QChar(0), const bool allowhash = false);
 
     inline bool parseTag(const QString& text, const QChar *& p);
     inline bool parseCompositeTag(const QString& text, const QChar *& p);
