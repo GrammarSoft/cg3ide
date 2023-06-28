@@ -35,10 +35,10 @@ Processor::Processor(const QString& paramname) :
     ui->prgProgress->hide();
     ui->editLogPipe->hide();
 
-    int tabwidth = QFontMetrics(ui->editLog->document()->defaultFont()).width('x')*3;
-    ui->editLog->setTabStopWidth(tabwidth);
-    ui->editLogPipe->setTabStopWidth(tabwidth);
-    ui->editLogCG->setTabStopWidth(tabwidth);
+    int tabwidth = QFontMetrics(ui->editLog->document()->defaultFont()).horizontalAdvance('x')*3;
+    ui->editLog->setTabStopDistance(tabwidth);
+    ui->editLogPipe->setTabStopDistance(tabwidth);
+    ui->editLogCG->setTabStopDistance(tabwidth);
 
     QFile paramf(paramname);
     if (!paramf.open(QIODevice::ReadOnly)) {
@@ -47,7 +47,7 @@ Processor::Processor(const QString& paramname) :
     }
 
     QTextStream paramt(&paramf);
-    paramt.setCodec("UTF-8");
+    setEncoding(paramt);
 
     while (!paramt.atEnd()) {
         auto tmp = paramt.readLine();

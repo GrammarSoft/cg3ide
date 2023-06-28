@@ -24,6 +24,10 @@
 #define INLINES_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7
 
 #include <QtWidgets>
+#include <QRandomGenerator>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    #include <QtCore5Compat/QTextCodec>
+#endif
 #include <cstdint>
 
 #define CG_DIRECTIVES_OR "SETS|LIST|SET|DELIMITERS|SOFT-DELIMITERS|PREFERRED-TARGETS" \
@@ -91,6 +95,14 @@ inline void editorGotoLine(QPlainTextEdit *editor, int line=0) {
     editor->setFocus();
 }
 
+inline void setEncoding(QTextStream& stream) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    stream.setCodec("UTF-8");
+#else
+    stream.setEncoding(QStringConverter::Utf8);
+#endif
+}
+
 inline QString fileGetContents(const QString& name, qint64 max = 0) {
     QFile file(name);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -99,7 +111,7 @@ inline QString fileGetContents(const QString& name, qint64 max = 0) {
     }
 
     QTextStream in(&file);
-    in.setCodec("UTF-8");
+    setEncoding(in);
     in.setAutoDetectUnicode(true);
     if (max) {
         return in.read(max);
@@ -116,7 +128,7 @@ inline bool filePutContents(const QString& name, const QString& data) {
     }
 
     QTextStream out(&file);
-    out.setCodec("UTF-8");
+    setEncoding(out);
     out << data;
     out.flush();
     file.close();
