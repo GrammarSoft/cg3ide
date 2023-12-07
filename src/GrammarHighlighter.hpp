@@ -28,53 +28,53 @@
 #include <set>
 
 class GrammarHighlighter : public QSyntaxHighlighter {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    GrammarHighlighter(QTextDocument *parent = nullptr);
-    QMap<QString,int> set_lines;
-    QMap<QString,int> tmpl_lines;
-    std::set<int> section_lines;
+	GrammarHighlighter(QTextDocument *parent = nullptr);
+	QMap<QString,int> set_lines;
+	QMap<QString,int> tmpl_lines;
+	std::set<int> section_lines;
 
 public slots:
-    void clear();
+	void clear();
 
 protected:
-    void highlightBlock(const QString& text);
+	void highlightBlock(const QString& text);
 
 public:
-    enum {
-        F_ERROR,
-        F_COMMENT,
-        F_DIRECTIVE,
-        F_TAG,
-        F_SETNAME,
-        F_SETOP,
-        F_TMPLNAME,
-        F_ANCHOR,
-        F_CNTXMOD,
-        F_CNTXPOS,
-        F_CNTXOP,
-        F_RULE_FLAG,
-        F_OPTIONAL,
-        NUM_FORMATS
-    };
-    QVector<QTextCharFormat> fmts;
-    QVector<QStringList> fmt_desc;
+	enum {
+		F_ERROR,
+		F_COMMENT,
+		F_DIRECTIVE,
+		F_TAG,
+		F_SETNAME,
+		F_SETOP,
+		F_TMPLNAME,
+		F_ANCHOR,
+		F_CNTXMOD,
+		F_CNTXPOS,
+		F_CNTXOP,
+		F_RULE_FLAG,
+		F_OPTIONAL,
+		NUM_FORMATS
+	};
+	QVector<QTextCharFormat> fmts;
+	QVector<QStringList> fmt_desc;
 
 private:
-    inline bool SKIPWS(const QChar *& p, const QChar a = QChar(0), const QChar b = QChar(0));
-    inline bool SKIPTOWS(const QChar *& p, const QChar a = QChar(0), const bool allowhash = false);
+	inline bool SKIPWS(const QChar *& p, const QChar a = QChar(0), const QChar b = QChar(0));
+	inline bool SKIPTOWS(const QChar *& p, const QChar a = QChar(0), const bool allowhash = false);
 
-    inline bool parseTag(const QString& text, const QChar *& p);
-    inline bool parseCompositeTag(const QString& text, const QChar *& p);
-    inline bool parseTagList(const QString& text, const QChar *& p);
-    inline bool parseAnchorish(const QString& text, const QChar *& p);
-    inline bool parseSectionDirective(const QString& text, const QChar *& p, int length);
-    inline bool parseRuleDirective(const QString& text, const QChar *& p, int length);
-    inline bool parseNone(const QString& text, const QChar *& p);
+	inline bool parseTag(const QString& text, const QChar *& p);
+	inline bool parseCompositeTag(const QString& text, const QChar *& p);
+	inline bool parseTagList(const QString& text, const QChar *& p);
+	inline bool parseAnchorish(const QString& text, const QChar *& p);
+	inline bool parseSectionDirective(const QString& text, const QChar *& p, int length);
+	inline bool parseRuleDirective(const QString& text, const QChar *& p, int length);
+	inline bool parseNone(const QString& text, const QChar *& p);
 
-    GrammarState *state;
+	GrammarState *state;
 };
 
 #endif // GRAMMARHIGHLIGHTER_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7

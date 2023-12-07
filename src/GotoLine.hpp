@@ -30,18 +30,18 @@ class GotoLine;
 }
 
 class GotoLine : public QDialog {
-    Q_OBJECT
-    
+	Q_OBJECT
+
 public:
-    explicit GotoLine(QWidget *parent = nullptr, QPlainTextEdit *editor = nullptr);
-    ~GotoLine();
+	explicit GotoLine(QWidget *parent = nullptr, QPlainTextEdit *editor = nullptr);
+	~GotoLine();
 
 private slots:
-    void accept();
-    
+	void accept();
+
 private:
-    QScopedPointer<Ui::GotoLine> ui;
-    QPlainTextEdit *editor;
+	QScopedPointer<Ui::GotoLine> ui;
+	QPlainTextEdit *editor;
 };
 
 #endif // GOTOLINE_HPP_cc7194f1bd3a13d1dca4d5a1c31f83d81877a7f7
