@@ -986,6 +986,18 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
 			state->stack << (S_SEMICOLON|S_TAGLIST) << S_TAG << S_EQUALS; // ToDo: Set name list, not tag list
 			return true;
 		}
+		// CMDARGS-OVERRIDE
+		else if (IS_ICASE(p, "CMDARGS-OVERRIDE", "cmdargs-override")) {
+			parseRuleDirective(text, p, 16);
+			state->stack << (S_SEMICOLON|S_TAGLIST) << (S_TAG|S_COMPOSITETAG) << S_EQUALS;
+			return true;
+		}
+		// CMDARGS
+		else if (IS_ICASE(p, "CMDARGS", "cmdargs")) {
+			parseRuleDirective(text, p, 7);
+			state->stack << (S_SEMICOLON|S_TAGLIST) << (S_TAG|S_COMPOSITETAG) << S_EQUALS;
+			return true;
+		}
 		// REOPEN-MAPPINGS
 		else if (ISCHR(*p, 'R', 'r') && ISCHR(*(p + 14), 'S', 's') && ISCHR(*(p + 1), 'E', 'e') && ISCHR(*(p + 2), 'O', 'o')
 			&& ISCHR(*(p + 3), 'P', 'p') && ISCHR(*(p + 4), 'E', 'e') && ISCHR(*(p + 5), 'N', 'n') && ISCHR(*(p + 6), '-', '_')

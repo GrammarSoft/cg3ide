@@ -304,7 +304,7 @@ void GrammarEditor::refreshInput() {
 			break;
 		}
 		file = file.trimmed();
-		if (file[0] == '#') {
+		if (file.isEmpty() || file[0] == '#') {
 			continue;
 		}
 		if (!QFileInfo(file).isReadable()) {
@@ -322,7 +322,7 @@ void GrammarEditor::refreshInput() {
 	QStringList pipes;
 	for (auto& prog : ui->editInputPipe->toPlainText().split('\n')) {
 		prog = prog.trimmed();
-		if (prog[0] == '#' || prog.isEmpty()) {
+		if (prog.isEmpty() || prog[0] == '#') {
 			continue;
 		}
 		pipes << prog;
