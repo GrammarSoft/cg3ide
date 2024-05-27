@@ -1,5 +1,5 @@
 /*
-* Copyright 2013-2023, GrammarSoft ApS
+* Copyright 2013-2024, GrammarSoft ApS
 * Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
@@ -154,7 +154,7 @@ void GrammarEditor::closeEvent(QCloseEvent *event) {
 void GrammarEditor::on_actAbout_triggered() {
 	QMessageBox::about(this, tr("About CG-3 IDE"), tr("<h1>CG-3 IDE</h1>")
 					   + tr("<b>Version %1.%2.%3.%4</b>").arg(CG3IDE_VERSION_MAJOR).arg(CG3IDE_VERSION_MINOR).arg(CG3IDE_VERSION_PATCH).arg(CG3IDE_REVISION)
-					   + tr("<ul><li>Developed by <a href=\"https://tinodidriksen.com/\">Tino Didriksen</a> for <a href=\"https://grammarsoft.com/\">GrammarSoft ApS</a></li><li>Development funded by <a href=\"http://www2.lael.pucsp.br/~tony/\">Tony Berber Sardinha</a>, <a href=\"http://pucsp.br/\">São Paulo Catholic University</a>, <a href=\"http://www2.lael.pucsp.br/corpora/\">CEPRIL</a>, <a href=\"http://cnpq.br/\">CNPq</a>, <a href=\"http://fapesp.br/\">FAPESP</a></li><li>Copyright 2013-2023 GrammarSoft ApS</li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
+					   + tr("<ul><li>Developed by <a href=\"https://tinodidriksen.com/\">Tino Didriksen</a> for <a href=\"https://grammarsoft.com/\">GrammarSoft ApS</a></li><li>Development funded by <a href=\"http://www2.lael.pucsp.br/~tony/\">Tony Berber Sardinha</a>, <a href=\"http://pucsp.br/\">São Paulo Catholic University</a>, <a href=\"http://www2.lael.pucsp.br/corpora/\">CEPRIL</a>, <a href=\"http://cnpq.br/\">CNPq</a>, <a href=\"http://fapesp.br/\">FAPESP</a></li><li>Copyright 2013-2024 GrammarSoft ApS</li></ul><hr/>Report bugs and feature request to <a href=\"mailto:mail@tinodidriksen.com\">Tino Didriksen &lt;mail@tinodidriksen.com&gt;</a>"));
 }
 
 void GrammarEditor::on_actHelp_triggered() {

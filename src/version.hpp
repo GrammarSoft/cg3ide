@@ -1,5 +1,5 @@
 /*
-* Copyright 2013-2023, GrammarSoft ApS
+* Copyright 2013-2024, GrammarSoft ApS
 * Developed by Tino Didriksen <mail@tinodidriksen.com> for GrammarSoft ApS (https://grammarsoft.com/)
 * Development funded by Tony Berber Sardinha (http://www2.lael.pucsp.br/~tony/), São Paulo Catholic University (http://pucsp.br/), CEPRIL (http://www2.lael.pucsp.br/corpora/), CNPq (http://cnpq.br/), FAPESP (http://fapesp.br/)
 *
@@ -25,11 +25,11 @@
 
 #include <cstdint>
 
-constexpr auto CG3IDE_COPYRIGHT_STRING = "Copyright (C) 2013-2023 GrammarSoft ApS. All Rights Reserved.";
+constexpr auto CG3IDE_COPYRIGHT_STRING = "Copyright (C) 2013-2024 GrammarSoft ApS. All Rights Reserved.";
 
 constexpr uint32_t CG3IDE_VERSION_MAJOR = 0;
 constexpr uint32_t CG3IDE_VERSION_MINOR = 7;
-constexpr uint32_t CG3IDE_VERSION_PATCH = 0;
+constexpr uint32_t CG3IDE_VERSION_PATCH = 1;
 constexpr uint32_t CG3IDE_REVISION = 9690;
 
 #endif
