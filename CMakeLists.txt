@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 project(cg3ide
-	VERSION 0.7.1
+	VERSION 0.7.2
 	LANGUAGES CXX
     )
 

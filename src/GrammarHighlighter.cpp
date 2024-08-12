@@ -125,7 +125,7 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
 		if (state->stack.empty()) {
 			state->stack << S_NONE;
 		}
-		size_t cs = state->stack.back();
+		auto cs = state->stack.back();
 		if (cs & S_ERROR) {
 			const int index = p-text.constData(), length = text.length() - (p-text.constData());
 			setFormat(index, length, fmts[F_ERROR]);
@@ -335,6 +335,20 @@ void GrammarHighlighter::highlightBlock(const QString& text) {
 			}
 			else {
 				state->stack << S_ERROR;
+			}
+			continue;
+		}
+		if (cs & S_BEFORE_AFTER_DEF) {
+			state->stack.pop_back();
+			if (IS_ICASE(p, "BEFORE", "before") && !p[6].isLetterOrNumber()) {
+				const int index = p-text.constData();
+				setFormat(index, 6, fmts[F_DIRECTIVE]);
+				p += 6;
+			}
+			else if (IS_ICASE(p, "AFTER", "after") && !p[5].isLetterOrNumber()) {
+				const int index = p-text.constData();
+				setFormat(index, 5, fmts[F_DIRECTIVE]);
+				p += 5;
 			}
 			continue;
 		}
@@ -1377,6 +1391,12 @@ bool GrammarHighlighter::parseNone(const QString& text, const QChar *& p) {
 			&& !ISSTRING(p, 9)) {
 			parseRuleDirective(text, p, 10);
 			state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_BEFORE_AFTER_OPT << S_SET_INLINE << S_SET_INLINE << S_RULE_FLAG;
+			return true;
+		}
+		// COPYCOHORT
+		else if (IS_ICASE(p, "COPYCOHORT", "copycohort")) {
+			parseRuleDirective(text, p, 10);
+			state->stack << S_SEMICOLON << S_CONTEXT_LIST << S_WITHCHILD << S_BEFORE_AFTER_DEF << S_TO_FROM << S_CONTEXT_LIST << S_IF << S_SET_INLINE << S_TARGET << S_WITHCHILD << S_BEFORE_AFTER_DEF << S_EXCEPT << S_SET_INLINE << S_RULE_FLAG;
 			return true;
 		}
 		// COPY

@@ -27,7 +27,7 @@
 #include <cstdint>
 
 enum enum_state : uint64_t {
-	S_NONE		   =		 0,
+	S_NONE		   = 0,
 	S_TAGLIST		= (1 <<  0),
 	S_TAGLIST_INLINE = (1 <<  1),
 	S_COMPOSITETAG   = (1 <<  2),
@@ -63,6 +63,7 @@ enum enum_state : uint64_t {
 	S_BEFORE_AFTER_OPT = (1ull << 32),
 	S_BRACE_OPEN	 = (1ull << 33),
 	S_RULE_BLOCK	 = (1ull << 34),
+	S_BEFORE_AFTER_DEF = (1ull << 35),
 };
 using State = uint64_t;
 
